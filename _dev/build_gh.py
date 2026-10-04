@@ -15,6 +15,7 @@ meta=f'''<!doctype html>
 <style>:root{{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}}body{{margin:0}}img{{max-width:100%}}[hidden]{{display:none!important}}</style>
 <script src="config.js"></script>
 <script src="seed.js"></script>
+<script>window.HIKAM_STATIC=true</script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')window.addEventListener('load',function(){{navigator.serviceWorker.register('sw.js').catch(function(){{}})}});</script>
 '''
 head=head.replace('<meta name="description" content="شذرات: حكم وأمثال تُقرأ وتُشارَك في بطاقات مزخرفة.">',f'<meta name="description" content="{desc}">')
@@ -49,3 +50,18 @@ for i,x in enumerate(seed):
     rows.append(f"({q('m'+str(i+1))},{q(x['text'])},{q(x['kind'])},{q(x.get('topic',''))},{q(x.get('note',''))},{q(x.get('source',''))},{1759500000000-i*60000})")
 open(OUT+'/supabase-data.sql','w').write('-- شذرات: إدخال الحكم ('+str(len(rows))+') بعد تشغيل supabase-setup.sql\ninsert into public.hikam_sayings (id,text,kind,topic,note,source,created) values\n'+',\n'.join(rows)+'\non conflict (id) do nothing;\n')
 print(len(rows))
+
+# one small static page per saying, so a shared link previews the saying itself
+import html as _h
+os.makedirs(OUT+'/s',exist_ok=True)
+seed=json.loads(open('seed.js').read().split('=',1)[1].strip().rstrip(';'))
+for n,x in enumerate(seed):
+    t=x['text'].strip();short=t if len(t)<=110 else t[:108].rsplit(' ',1)[0]+'…'
+    T=_h.escape(short,quote=True);full=_h.escape(t);i=x.get('id') or f'm{n+1}'
+    open(OUT+f'/s/{i}.html','w').write(f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{T} | شذرات</title><meta name="description" content="من أقوال د. عبدالعزيز فيصل المطوع · شذرات">
+<meta property="og:type" content="article"><meta property="og:site_name" content="شذرات"><meta property="og:title" content="{T}"><meta property="og:description" content="من أقوال د. عبدالعزيز فيصل المطوع · شذرات"><meta property="og:url" content="{URL}s/{i}.html"><meta property="og:image" content="{URL}icons/og-image.png?v=3"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="{URL}s/{i}.html"><link rel="icon" href="../icons/favicon-64.png"><meta http-equiv="refresh" content="0;url=../#s/{i}"><script>location.replace('../#s/{i}')</script></head>
+<body style="font-family:serif;text-align:center;padding:40px"><p style="font-size:1.4rem">{full}</p><p><a href="../#s/{i}">افتح في شذرات</a></p></body></html>
+''')
+print('static pages',len(seed))
