@@ -77,6 +77,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .filters{position:sticky;z-index:5;background:var(--bg);padding-block:12px 10px;display:grid;grid-template-columns:minmax(0,1fr);gap:10px;border-bottom:1px solid var(--line)}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .grow{flex:1 1 220px;min-width:0}
+.filters .row>span.grow{flex:1 1 0}
 .search{position:relative}
 .search input[type=search]{padding-inline-start:40px}
 .search svg{position:absolute;inset-inline-start:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
@@ -275,6 +276,22 @@ mark{background:color-mix(in srgb,var(--gold) 30%,transparent);color:inherit;bor
 .qopt.wrong{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 12%,var(--surface));text-decoration:line-through}
 .qopt.dim{opacity:.55}
 .qres{text-align:center;margin-top:14px;font-weight:600}.qres.ok{color:var(--ok)}.qres.no{color:var(--danger)}
+
+/* phone fit: brand never squeezed, verse-of-day buttons stay inside the frame, stats on one tidy row */
+.tb-brand{flex:none}
+@media (max-width:820px){
+  .hero .votd{padding:18px 22px 20px}
+  .hero .votd::before{inset:8px}
+  .hero .votd .acts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:8px;width:100%}
+  .hero .votd .btn{min-width:0;padding:8px 6px;font-size:.9rem;overflow:hidden}
+  .hero .votd .btn svg{flex:none}
+  .hero .votd .btn.ghost{width:42px;padding:8px 0}
+  .hero .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:6px;overflow:visible}
+  .hero .stat{padding:5px 2px;grid-auto-flow:row;gap:0;justify-items:center;text-align:center;min-width:0}
+  .hero .stat span{font-size:.72rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+}
+@media (max-width:480px){.hero .votd .lg{display:none}}
+@media (max-width:380px){.tb-brand span{display:none}.topbar .wrap{gap:8px}}
 /* bottom bar (phones) */
 .bbar{display:none}
 .menu{position:relative}
@@ -536,7 +553,7 @@ function votdHtml(){
   var v=S.rnd?byId(S.rnd):ofDay();if(!v)return '';
   return '<section class="votd" aria-label="حكمة اليوم"><span class="star8 a" aria-hidden="true">'+ICO.star+'</span><span class="star8 b" aria-hidden="true">'+ICO.star+'</span>'
    +'<div class="eyebrow">'+(S.rnd?KIND[v.kind]+' مختارة':KIND[v.kind]+' اليوم').replace('مثل مختارة','مثل مختار').replace('غزل مختارة','من الغزل')+'</div><q>'+esc(v.text)+'</q><div class="by">'+esc(father())+'</div>'
-   +'<div class="acts"><button class="btn wa" data-act="wacard" data-id="'+v.id+'">'+ICO.wa+' أرسل في واتساب</button><button class="btn primary" data-act="card" data-id="'+v.id+'">'+ICO.card+' صمّم البطاقة</button><button class="btn ghost" data-act="rand" aria-label="حكمة أخرى" title="حكمة أخرى">'+ICO.dice+'<span class="tx"> أخرى</span></button></div></section>';
+   +'<div class="acts"><button class="btn wa" data-act="wacard" data-id="'+v.id+'">'+ICO.wa+' <span class="lg">أرسل في </span>واتساب</button><button class="btn primary" data-act="card" data-id="'+v.id+'">'+ICO.card+' <span class="lg">صمّم </span>البطاقة</button><button class="btn ghost" data-act="rand" aria-label="حكمة أخرى" title="حكمة أخرى">'+ICO.dice+'<span class="tx"> أخرى</span></button></div></section>';
 }
 function bbar(){
   var b=function(act,v,ic,l){return '<button data-act="'+act+'" aria-pressed="'+(S.view===v)+'"'+(S.view===v?' aria-current="page"':'')+'>'+ic+l+'</button>'};
@@ -550,7 +567,7 @@ function filtersHtml(){
    +'<select id="sort" aria-label="الترتيب" style="width:auto">'+[['new','الأحدث'],['old','الأقدم'],['az','أبجدي'],['rand','عشوائي']].map(function(o){return '<option value="'+o[0]+'"'+(S.sort===o[0]?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select>'+(S.q?'<button class="chip" data-act="clearq" aria-pressed="true">بحث: '+esc(S.q)+' ✕</button>':'')+'<span class="grow"></span><span class="count" id="count">'+n+' نتيجة</span></div>'
    +'<div class="row"><div class="chips grow" role="group" aria-label="الموضوع"><button class="chip" data-act="topic" data-v="" aria-pressed="'+(!S.topic)+'">كل المواضيع</button>'
    +tps.map(function(t){return '<button class="chip" data-act="topic" data-v="'+esc(t[0])+'" aria-pressed="'+(S.topic===t[0])+'">'+esc(t[0])+'<small>'+t[1]+'</small></button>'}).join('')
-   +'</div><button class="chip" data-act="onlyfav" aria-pressed="'+S.onlyFav+'">♥ مفضلتي</button></div></div>';
+   +'</div></div></div>';
 }
 function tileHtml(x){
   var fav=!!S.fav[x.id];
