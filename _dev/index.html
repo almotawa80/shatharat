@@ -336,7 +336,7 @@ h2.rel{font-family:var(--f-display);color:var(--madder);text-align:center;margin
 .facts .btn[disabled]{opacity:.4;cursor:default}
 
 .page:has(.fstack){overflow-x:clip;margin-inline:-16px;padding-inline:16px}
-/* ومضة: a deck of cards in the style of Diwan's — gold edge, soft gradient, two cards peeking from behind */
+/* شذرة: a deck of cards in the style of Diwan's — gold edge, soft gradient, two cards peeking from behind */
 .fstack{position:relative;max-width:460px;margin:6px auto 40px}
 .fstack::before,.fstack::after{content:"";position:absolute;inset:0;border-radius:24px;border:1px solid var(--gold);background:linear-gradient(165deg,var(--tint),var(--surface) 72%);z-index:0;box-shadow:0 10px 30px -12px rgba(0,0,0,.3)}
 .fstack::after{transform:translateY(16px) scale(.94);opacity:.85;transform-origin:50% 120%}
@@ -642,7 +642,7 @@ function votdHtml(){
 }
 function bbar(){
   var b=function(act,v,ic,l){return '<button data-act="'+act+'" aria-pressed="'+(S.view===v)+'"'+(S.view===v?' aria-current="page"':'')+'>'+ic+l+'</button>'};
-  var hl='<button class="hl" data-act="goflash" aria-pressed="'+(S.view==='flash')+'"'+(S.view==='flash'?' aria-current="page"':'')+'><span>'+NAVI.spark+'</span>ومضة</button>';
+  var hl='<button class="hl" data-act="goflash" aria-pressed="'+(S.view==='flash')+'"'+(S.view==='flash'?' aria-current="page"':'')+'><span>'+NAVI.spark+'</span>شذرة</button>';
   return '<nav class="bbar" aria-label="التنقل">'+b('top','home',NAVI.home,'الرئيسية')+b('gotopics','topics',NAVI.grid,'المواضيع')+hl
    +b('goquiz','quiz',NAVI.quiz,'تحدٍّ')+b('gofav','fav',NAVI.heart,'مفضلتي')
    +(S.canEdit?'<button class="plus" data-act="add" aria-label="إضافة حكمة">'+NAVI.plus+'إضافة</button>':'')+'</nav>';
@@ -738,7 +738,7 @@ function adminView(){
 }
 
 
-/* ---------- pages: ومضة، تحدٍّ، مفضلتي ---------- */
+/* ---------- pages: شذرة، تحدٍّ، مفضلتي ---------- */
 var VIEWS={flash:1,quiz:1,fav:1,topics:1};
 function pageHead(t,sub){return '<header class="phead"><h1>'+t+'</h1>'+(sub?'<p>'+sub+'</p>':'')+'</header>'}
 function nextFlash(){var pool=real().filter(function(x){return !S.fk||x.kind===S.fk});if(!pool.length)pool=real();if(!pool.length)return;var n,i=0;do{n=pool[Math.floor(Math.random()*pool.length)].id;i++}while(n===S.flash&&pool.length>1&&i<9);S.flash=n}
@@ -749,11 +749,11 @@ function flashView(){
   if(!S.flash||!byId(S.flash)){nextFlash();S.fh=[S.flash];S.fi=0}var v=byId(S.flash);
   var kinds=[['','الكل']].concat(KINDS.filter(function(k){return real().some(function(x){return x.kind===k[0]})}));
   var fav=v&&!!S.fav[v.id];
-  return topbar()+'<div class="wrap page fpage">'+pageHead('ومضة','حكمة مختارة عشوائيًا، تتجدد مع كل ضغطة.')
+  return topbar()+'<div class="wrap page fpage">'+pageHead('شذرة','حكمة مختارة عشوائيًا، تتجدد مع كل ضغطة.')
    +'<div class="seg fseg" role="group" aria-label="النوع">'+kinds.map(function(k){return '<button data-act="fk" data-v="'+k[0]+'" aria-pressed="'+((S.fk||'')===k[0])+'">'+k[1]+'</button>'}).join('')+'</div>'
    +(v?'<div class="fstack"><section class="flash swipe fcard'+(v.text.length>360?' l4':v.text.length>220?' l3':v.text.length>120?' l2':'')+(rise?' rise':'')+'" aria-live="polite"><span class="flspark" aria-hidden="true">'+FSPARK+'</span><button class="ffav" data-act="fav" data-id="'+v.id+'" aria-pressed="'+fav+'" aria-label="مفضلة">'+(fav?ICO.heartF:ICO.heart)+'</button><div class="eyebrow">'+KIND[v.kind]+(v.topic?' · '+esc(v.topic):'')+'</div><q>'+esc(v.text)+'</q>'+(v.note?'<div class="mean">'+esc(v.note)+'</div>':'')+'<div class="by">'+esc(father())+'</div></section></div>'
    +('ontouchstart' in window?'<p class="shint'+(LS.get('hikam-flh',0)<3?'':' off')+'">اسحب البطاقة يمينًا أو يسارًا</p>':'')
-   +'<div class="flbar"><button class="btn ic" data-act="flashprev" aria-label="السابقة" title="السابقة"'+(S.fi>0?'':' disabled')+'>'+FUNDO+'</button><button class="btn primary" data-act="flashnext">ومضة أخرى</button><button class="btn ic" data-act="card" data-id="'+v.id+'" aria-label="مشاركة كصورة" title="مشاركة كصورة">'+NAVI.share+'</button></div>':'<div class="empty">لا توجد حكم بعد.</div>')
+   +'<div class="flbar"><button class="btn ic" data-act="flashprev" aria-label="السابقة" title="السابقة"'+(S.fi>0?'':' disabled')+'>'+FUNDO+'</button><button class="btn primary" data-act="flashnext">شذرة أخرى</button><button class="btn ic" data-act="card" data-id="'+v.id+'" aria-label="مشاركة كصورة" title="مشاركة كصورة">'+NAVI.share+'</button></div>':'<div class="empty">لا توجد حكم بعد.</div>')
    +'</div>'+bbar();
 }
 function favView(){
@@ -832,14 +832,14 @@ function shareLink(x){
   else if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){toast('نُسخ رابط الحكمة')},function(){prompt('انسخ الرابط',url)})}
   else prompt('انسخ الرابط',url);
 }
-/* swipe between sayings on ومضة; keeps a short history so a swipe back returns */
+/* swipe between sayings on شذرة; keeps a short history so a swipe back returns */
 function flashGo(dir){
   S.fh=S.fh||[];S.fi=S.fi==null?S.fh.length-1:S.fi;
   if(dir<0){if(S.fi>0){S.fi--;S.flash=S.fh[S.fi]}else return}
   else{if(S.fi<S.fh.length-1){S.fi++;S.flash=S.fh[S.fi]}else{nextFlash();S.fh.push(S.flash);if(S.fh.length>40)S.fh.shift();S.fi=S.fh.length-1}}
   S.fdir=dir;render.keep=true;render();
 }
-/* drag the ومضة card with the finger; past the threshold it flies out and the next card rises from the stack */
+/* drag the شذرة card with the finger; past the threshold it flies out and the next card rises from the stack */
 var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 function flyFlash(dir,fromX){
   var el=$('.flash.swipe');if(!el||RM){flashGo(dir);return}
