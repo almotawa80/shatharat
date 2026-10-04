@@ -16,6 +16,8 @@ meta=f'''<!doctype html>
 <script src="config.js"></script>
 <script src="seed.js"></script>
 <script>window.HIKAM_STATIC=true</script>
+<!-- Cloudflare Web Analytics -->
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{{"token": "519420ff1f074d8d8b0c7c8aeeff84ca"}}'></script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')window.addEventListener('load',function(){{navigator.serviceWorker.register('sw.js').catch(function(){{}})}});</script>
 '''
 head=head.replace('<meta name="description" content="شذرات: حكم وأمثال تُقرأ وتُشارَك في بطاقات مزخرفة.">',f'<meta name="description" content="{desc}">')
