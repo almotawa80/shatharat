@@ -150,6 +150,20 @@ mark{background:color-mix(in srgb,var(--gold) 30%,transparent);color:inherit;bor
 .tlist button[aria-pressed=true]{background:var(--madder);color:var(--on-acc);border-color:var(--madder)}
 .tlist button[aria-pressed=true] small{color:var(--on-acc)}
 @media (max-width:760px){.tsheet{border-radius:18px 18px 0 0;width:100%;max-height:75vh;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}}
+.linkb{background:none;border:0;color:var(--madder);font:inherit;font-size:14px;text-decoration:underline;text-underline-offset:4px;cursor:pointer;margin-top:6px;padding:6px}
+#inst{position:fixed;z-index:15;inset-inline:12px;bottom:calc(14px + env(safe-area-inset-bottom,0px));max-width:520px;margin-inline:auto;display:flex;align-items:center;gap:10px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:10px 10px 10px 8px;box-shadow:0 14px 34px -12px rgba(0,0,0,.45);animation:instUp .35s ease}
+@keyframes instUp{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+#inst .ilogo svg{width:46px;height:46px;display:block}
+#inst .itx{flex:1;min-width:0;line-height:1.45}#inst .itx b{display:block;font-size:15px}#inst .itx span{font-size:13px;color:var(--muted)}
+#inst .btn{white-space:nowrap;padding:8px 14px}
+#inst .ix{background:none;border:0;color:var(--muted);font-size:16px;padding:6px;cursor:pointer;align-self:flex-start}
+@media (max-width:760px){#inst{bottom:calc(74px + env(safe-area-inset-bottom,0px))}}
+.ihelp{gap:12px;overflow:auto}
+.ihead{display:flex;align-items:center;gap:12px}.ihead svg{width:58px;height:58px;flex:none}.ihead p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
+.ihelp section{border:1px solid var(--line);border-radius:14px;padding:10px 14px;background:var(--bg)}
+.ihelp h4{margin:0 0 4px;font-size:15px;color:var(--madder)}
+.ihelp ol{margin:0;padding-inline-start:20px;font-size:14.5px;line-height:1.9}
+.ki{width:20px;height:20px;vertical-align:-5px;color:var(--madder)}
 #ov{position:fixed;inset:0;z-index:20;background:rgba(15,12,20,.72);display:flex;align-items:center;justify-content:center;padding:16px;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
 .studio{background:var(--surface);border-radius:18px;width:min(900px,100%);max-height:100%;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);grid-template-rows:auto 1fr auto;grid-template-areas:"pv head" "pv ctl" "pv bar";column-gap:18px;padding:16px}
 .shead{grid-area:head;display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -205,7 +219,7 @@ mark{background:color-mix(in srgb,var(--gold) 30%,transparent);color:inherit;bor
 .hero.slim{padding-bottom:18px}
 .hero .sadu{margin-inline:-16px}
 .hero-in{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:24px;align-items:center;padding-top:18px}
-@media (max-width:820px){.hero-in{grid-template-columns:1fr;gap:10px;padding-top:10px}.hero .ttl>b{display:none}.hero .stats{flex-wrap:nowrap;overflow-x:auto;gap:6px}.hero .votd .acts{flex-wrap:nowrap}.hero .votd .btn{padding:6px 10px;font-size:.9rem}.hero .votd .btn.ghost .tx{display:none}.hero .votd{padding:14px 14px 12px}.hero .stat{flex:none}.stats{margin-top:8px}.hero .stat{padding:4px 10px;grid-auto-flow:column;gap:6px;align-items:baseline}.stat b{font-size:1.05rem!important}}
+@media (max-width:820px){.hero-in{grid-template-columns:minmax(0,1fr);gap:10px;padding-top:10px}.hero .ttl>b{display:none}.hero .stats{flex-wrap:nowrap;overflow-x:auto;gap:6px}.hero .votd .acts{flex-wrap:nowrap}.hero .votd .btn{padding:6px 10px;font-size:.9rem}.hero .votd .btn.ghost .tx{display:none}.hero .votd{padding:14px 14px 12px}.hero .stat{flex:none}.stats{margin-top:8px}.hero .stat{padding:4px 10px;grid-auto-flow:column;gap:6px;align-items:baseline}.stat b{font-size:1.05rem!important}}
 .ttl b{display:block;font-family:var(--f-display);font-weight:700;font-size:clamp(2.2rem,6vw,3.3rem);line-height:1.15;color:var(--hero-gold)}
 .ttl .who{font-family:var(--f-say);font-size:clamp(1.15rem,3.6vw,1.45rem);color:var(--hero-muted);margin-top:8px}
 .ttl .who em{font-style:normal;color:var(--hero-ink);font-weight:700}
@@ -228,6 +242,35 @@ mark{background:color-mix(in srgb,var(--gold) 30%,transparent);color:inherit;bor
 
 /* bottom bar (phones) */
 .bbar{display:none}
+.menu{position:relative}
+.topbar .mbtn{width:40px;height:40px;padding:0;display:grid;place-items:center}.mbtn svg{width:21px;height:21px}
+.mpanel{position:absolute;top:calc(100% + 8px);inset-inline-end:0;z-index:30;width:236px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:8px;box-shadow:0 18px 40px -14px rgba(0,0,0,.45);display:grid;gap:2px;animation:mIn .16s ease}
+@keyframes mIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.mwho{display:flex;align-items:center;gap:8px;padding:6px 8px 10px;border-bottom:1px solid var(--line);margin-bottom:4px;font-size:13.5px;color:var(--muted);min-width:0}.mwho svg{width:20px;height:20px;flex:none;color:var(--madder)}.mwho span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mlab{font-size:12px;color:var(--muted);padding:2px 8px}
+.mtheme{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:4px;margin:0 2px 6px}
+.mtheme button{border:0;background:none;color:var(--muted);border-radius:9px;padding:6px 2px;display:grid;justify-items:center;gap:1px;font:inherit;font-size:11.5px;cursor:pointer}
+.mtheme svg{width:20px;height:20px}
+.mtheme button[aria-pressed=true]{background:var(--surface);color:var(--madder);box-shadow:0 1px 4px rgba(0,0,0,.15);font-weight:600}
+.mi{display:flex;align-items:center;gap:10px;border:0;background:none;color:var(--ink);font:inherit;font-size:14.5px;padding:9px 8px;border-radius:10px;cursor:pointer;text-align:start;width:100%}
+.mi svg{width:20px;height:20px;color:var(--muted);flex:none}
+.mi:hover,.mi:focus-visible{background:var(--tint)}
+.mi.in{color:var(--madder);font-weight:600}.mi.in svg{color:var(--madder)}
+.mi.out{color:var(--danger)}.mi.out svg{color:var(--danger)}
+/* side rail on wider screens */
+@media (min-width:761px){
+  body:has(.bbar){padding-inline-start:104px}
+  body:has(.bbar) .topbar,body:has(.bbar) .hero{margin-inline-start:-104px;padding-inline-start:120px}
+  body:has(.bbar) .hero .sadu{margin-inline-start:-120px}
+  .bbar{display:flex;flex-direction:column;gap:6px;position:fixed;inset-inline-start:0;top:0;bottom:0;width:88px;z-index:8;padding:calc(var(--tb) + 24px) 8px 16px;background:var(--surface);border-inline-end:1px solid var(--line)}
+  .bbar button{border:0;background:none;display:grid;justify-items:center;gap:4px;font:inherit;font-size:.78rem;color:var(--muted);padding:10px 2px;border-radius:14px;cursor:pointer}
+  .bbar button svg{width:24px;height:24px}
+  .bbar button:hover{background:var(--tint);color:var(--ink)}
+  .bbar button[aria-pressed="true"]{color:var(--madder);background:var(--tint);font-weight:600}
+  .bbar .plus span{width:40px;height:40px;border-radius:50%;background:var(--madder);color:var(--on-acc);display:grid;place-items:center;font-size:1.5rem}
+  body:has(.bbar) .fab{display:none}
+}
+
 @media (max-width:760px){
   body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   .bbar{display:flex;position:fixed;inset-inline:0;bottom:0;z-index:9;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px))}
@@ -262,6 +305,7 @@ footer .sadu{height:14px;background-size:28px 14px;margin-inline:0;border-radius
 (function(){
 'use strict';
 var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
 var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
 var LS={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 var KEY='hikam-data-v3';
@@ -388,10 +432,48 @@ var ICO={
  star:'<svg viewBox="0 0 100 100" fill="currentColor"><path d="M50 0l14.6 14.6H85.4v20.8L100 50 85.4 64.6v20.8H64.6L50 100 35.4 85.4H14.6V64.6L0 50l14.6-14.6V14.6h20.8z"/></svg>',
  dice:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>'
 };
+
+function themeMode(){return document.documentElement.dataset.theme||'auto'}
+function menuHtml(){
+  var inn=S.canEdit||S.email,m=themeMode();
+  var tb=function(v,ic,l){return '<button data-act="setth" data-v="'+v+'" aria-pressed="'+(m===v)+'" title="'+l+'">'+ic+'<span>'+l+'</span></button>'};
+  return '<div class="mpanel" role="menu">'
+   +(inn?'<div class="mwho">'+NAVI.user+'<span>'+(S.email?esc(S.email):'مسجّل الدخول')+'</span></div>':'')
+   +'<div class="mlab">المظهر</div><div class="mtheme">'+tb('light',NAVI.sun,'فاتح')+tb('dark',NAVI.moon,'داكن')+tb('auto',NAVI.auto,'تلقائي')+'</div>'
+   +'<button class="mi" data-act="sharesite">'+NAVI.share+'مشاركة الموقع</button>'
+   +(isApp()?'':'<button class="mi" data-act="insthelp">'+NAVI.phone+'أضفه كتطبيق</button>')
+   +(S.canEdit?'<button class="mi" data-act="admin">'+NAVI.plus+'لوحة الإضافة</button>':'')
+   +(inn?'<button class="mi out" data-act="logout">'+NAVI.out+'تسجيل الخروج</button>':'<button class="mi in" data-act="login">'+NAVI.inI+'تسجيل الدخول</button>')
+   +'</div>';
+}
+function toggleMenu(btn,force){
+  var box=btn?btn.closest('.menu'):$('.menu'),open=$('.mpanel');
+  if(open){open.remove();$$('[data-act="menu"]').forEach(function(b){b.setAttribute('aria-expanded','false')});if(force!==true)return}
+  if(force===false||!box)return;
+  box.insertAdjacentHTML('beforeend',menuHtml());btn&&btn.setAttribute('aria-expanded','true');
+}
+document.addEventListener('click',function(e){if($('.mpanel')&&!e.target.closest('.menu'))toggleMenu(null,false)},true);
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&$('.mpanel'))toggleMenu(null,false)});
+function shareSite(){
+  var url=location.href.split('#')[0],d={title:siteName(),text:siteName()+': حكم وأمثال وطرائف من أقوال '+father()+'، تُقرأ وتُشارَك في بطاقات مزخرفة.',url:url};
+  if(navigator.share){navigator.share(d).catch(function(){})}
+  else if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){toast('نُسخ رابط الموقع')},function(){prompt('انسخ الرابط',url)})}
+  else prompt('انسخ الرابط',url);
+}
 function themeIco(){var d=isDark();return d?'☀':'☾'}
 function isDark(){var r=document.documentElement;return r.dataset.theme?r.dataset.theme==='dark':(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)}
 
 var NAVI={
+ menu:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
+ user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1.4-3.6 4.2-5.2 7.5-5.2s6.1 1.6 7.5 5.2"/></svg>',
+ sun:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>',
+ moon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>',
+ auto:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></svg>',
+ share:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="18" cy="5.5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="18.5" r="2.5"/><path d="M8.2 10.8l7.6-4.1M8.2 13.2l7.6 4.1"/></svg>',
+ phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg>',
+ plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg>',
+ out:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M9 8l-4 4 4 4M5 12h10"/></svg>',
+ inI:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4M10 8l4 4-4 4M14 12H4"/></svg>',
  spark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l2.2 5.3L19.5 10.5l-5.3 2.2L12 18l-2.2-5.3L4.5 10.5l5.3-2.2z"/><path d="M18.5 16.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z" fill="currentColor" stroke="none"/></svg>',
  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11 12 4l9 7v9H5v-9"/></svg>',
  topics:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h10M4 18h6"/></svg>',
@@ -402,9 +484,7 @@ function topbar(){
   var home=S.view==='home';
   return '<div class="topbar"><div class="wrap"><button class="tb-brand" data-act="top">'+esc(siteName())+'</button>'
    +(home?'<label class="tb-search">'+ICO.search+'<input id="q" type="search" placeholder="ابحث في '+real().length+' حكمة ومثل…" value="'+esc(S.q)+'" aria-label="بحث" enterkeyhint="search"></label>':'<span class="grow"></span>')
-   +(S.canEdit?'<button class="pill txt'+(S.view==='admin'?' on':'')+'" data-act="admin">لوحة الإضافة</button>':'')
-   +'<button class="pill" data-act="'+(S.canEdit||S.email?'logout':'login')+'">'+(S.canEdit||S.email?'خروج':'دخول')+'</button>'
-   +'<button class="pill sq" data-act="theme" aria-label="تبديل الألوان" title="تبديل الألوان">'+themeIco()+'</button></div></div>';
+   +'<div class="menu"><button class="pill mbtn" data-act="menu" aria-haspopup="true" aria-expanded="false" aria-label="القائمة">'+(S.canEdit||S.email?NAVI.user:NAVI.menu)+'</button></div></div></div>';
 }
 function mast(slim){
   var who='<div class="who">من أقوال <em>'+esc(father())+'</em></div>'+(S.settings.tagline?'<div class="tag">'+esc(S.settings.tagline)+'</div>':'');
@@ -422,7 +502,7 @@ function votdHtml(){
 function bbar(){
   return '<nav class="bbar" aria-label="التنقل"><button data-act="top" aria-pressed="'+(S.view==='home'&&!S.onlyFav)+'">'+NAVI.home+'الرئيسية</button><button data-act="totopics">'+NAVI.topics+'المواضيع</button>'
    +(S.canEdit?'<button class="plus" data-act="add" aria-label="إضافة حكمة"><span>+</span>إضافة</button>':'')
-   +'<button data-act="rand">'+NAVI.spark+'اقتراح</button><button data-act="onlyfav" aria-pressed="'+S.onlyFav+'">'+NAVI.heart+'مفضلتي</button></nav>';
+   +'<button data-act="rand">'+NAVI.spark+'ومضة</button><button data-act="onlyfav" aria-pressed="'+S.onlyFav+'">'+NAVI.heart+'مفضلتي</button></nav>';
 }
 function filtersHtml(){
   var tps=topicsAll(),n=visible().length;
@@ -454,7 +534,7 @@ function sampleNote(){
   if(S.offline)bits.push('<span>تعرض آخر نسخة محفوظة لأن الاتصال غير متاح.</span>');
   return bits.length?'<div class="note-bar">'+bits.join('')+'</div>':'';
 }
-function footerHtml(){return '<footer><div class="sadu" aria-hidden="true"></div><div>'+esc(siteName())+' · من أقوال '+esc(father())+' · '+real().length+' من الحكم والأمثال</div></footer>'}
+function footerHtml(){return '<footer><div class="sadu" aria-hidden="true"></div><div>'+esc(siteName())+' · من أقوال '+esc(father())+' · '+real().length+' من الحكم والأمثال</div>'+(isApp()?'':'<button class="linkb" data-act="insthelp">أضف الموقع كتطبيق على جوالك</button>')+'</footer>'}
 function homeView(){return topbar()+mast()+'<div class="wrap">'+sampleNote()+filtersHtml()+'<div id="list">'+listHtml()+'</div>'+footerHtml()+'</div>'+(S.canEdit?'<button class="fab" data-act="add" aria-label="إضافة حكمة" title="إضافة حكمة">+</button>':'')+bbar()}
 
 function loginView(){
@@ -1014,6 +1094,9 @@ document.addEventListener('click',function(e){
    case 'login':go('login');break;
    case 'demologin':S.canEdit=S.isOwner=true;LS.set('hikam-demo-admin',true);S.adm='add';go('admin');toast('دخلت في وضع المعاينة');break;
    case 'logout':if(S.mode==='supa'){sb.auth.signOut().finally(function(){S.canEdit=S.isOwner=false;S.email='';go('home');toast('تم الخروج')})}else{S.canEdit=S.isOwner=false;LS.set('hikam-demo-admin',false);go('home');toast('تم الخروج')}break;
+   case 'menu':toggleMenu(el);break;
+   case 'setth':var rt=document.documentElement;if(el.dataset.v==='auto'){delete rt.dataset.theme;LS.set('hikam-theme','')}else{rt.dataset.theme=el.dataset.v;LS.set('hikam-theme',el.dataset.v)}$$('.mtheme button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.v===themeMode())});break;
+   case 'sharesite':toggleMenu(null,false);shareSite();break;
    case 'theme':var r=document.documentElement;r.dataset.theme=isDark()?'light':'dark';LS.set('hikam-theme',r.dataset.theme);el.textContent=themeIco();break;
    case 'admin':S.adm=S.adm||'add';go('admin');break;
    case 'admin-set':S.adm='settings';go('admin');break;
@@ -1028,6 +1111,9 @@ document.addEventListener('click',function(e){
    case 'card':if(x)openStudio(id);break;
    case 'wacard':if(x){fontsReady();sendCard(x,quickCard(x))}break;
    case 'top':if(S.view!=='home'){S.edit=null;history.replaceState(null,'',location.pathname+location.search);go('home')}else{S.onlyFav=false;S.rnd=null;render.keep=true;render();window.scrollTo({top:0,behavior:'smooth'})}break;
+   case 'install':doInstall();break;
+   case 'instno':LS.set('hikam-inst',{t:Date.now()});var ib=$('#inst');if(ib)ib.remove();break;
+   case 'insthelp':toggleMenu(null,false);instHelp();break;
    case 'totopics':openTopics();break;
    case 'pick':closeStudio();S.topic=el.dataset.v;S.kind='';S.onlyFav=false;S.shown=24;S.view='home';render();var li=$('#list');if(li)window.scrollTo(0,li.getBoundingClientRect().top+window.scrollY-130);break;
    case 'rand':var pool=S.items;if(pool.length){S.rnd=pool[Math.floor(Math.random()*pool.length)].id;if(S.view!=='home'){S.view='home'}if(window.innerWidth<=760&&el.closest('.bbar')){render.keep=true;render();openStudio(S.rnd)}else{render.keep=true;render()}}break;
@@ -1060,6 +1146,39 @@ document.addEventListener('click',function(e){
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&$('#ov'))closeStudio()});
 window.addEventListener('hashchange',function(){var h=location.hash.slice(1);if(h&&byId(h))openStudio(h)});
 try{var th=LS.get('hikam-theme','');if(th)document.documentElement.dataset.theme=th}catch(e){}
+
+/* ---------- install as an app ---------- */
+var LOGO='<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#8e2318"/><g fill="none" stroke="#e8c67a"><path stroke-width="2.6" d="M14 14h36v36H14z M32 6.5 57.5 32 32 57.5 6.5 32z"/></g><text x="32" y="36" text-anchor="middle" dominant-baseline="middle" font-family="Aref Ruqaa,serif" font-weight="700" font-size="17" fill="#fbf3e3">شذرات</text></svg>';
+var instEvt=null,UA=navigator.userAgent||'';
+var isIOS=/iphone|ipad|ipod/i.test(UA)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+function isApp(){return (window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true}
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();instEvt=e;setTimeout(instBanner,4000)});
+window.addEventListener('appinstalled',function(){instEvt=null;LS.set('hikam-inst',{done:1});var b=$('#inst');if(b)b.remove();toast('تم تثبيت التطبيق')});
+function instBanner(){
+  if(isApp()||$('#inst')||$('#ov'))return;
+  var st=LS.get('hikam-inst',{});if(st.done||(st.t&&Date.now()-st.t<7*864e5))return;
+  if(!instEvt&&!isIOS&&!/android/i.test(UA))return;
+  var d=document.createElement('div');d.id='inst';d.setAttribute('role','dialog');d.setAttribute('aria-label','ثبّت التطبيق');
+  d.innerHTML='<div class="ilogo">'+LOGO+'</div><div class="itx"><b>ثبّت '+esc(siteName())+' على جوالك</b><span>افتحه من الشاشة الرئيسية بلمسة، مثل أي تطبيق.</span></div><button class="btn primary" data-act="install">'+(instEvt?'تثبيت':'كيف؟')+'</button><button class="ix" data-act="instno" aria-label="ليس الآن">✕</button>';
+  document.body.appendChild(d);
+}
+function instHelp(){
+  var o=$('#ov');if(o)o.remove();o=document.createElement('div');o.id='ov';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-label','إضافة التطبيق');
+  var shareI='<svg class="ki" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 15V3m0 0L8 7m4-4 4 4"/><path d="M7 10H5v11h14V10h-2"/></svg>';
+  var plusI='<svg class="ki" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg>';
+  var dotsI='<svg class="ki" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>';
+  var ios='<section><h4>في الآيفون والآيباد</h4><ol><li>افتح الموقع في <b>Safari</b>.</li><li>اضغط زر المشاركة '+shareI+' أسفل الشاشة.</li><li>اختر <b>«إضافة إلى الشاشة الرئيسية»</b> '+plusI+'</li><li>اضغط <b>«إضافة»</b>، فتظهر الأيقونة مع تطبيقاتك.</li></ol></section>';
+  var and='<section><h4>في أندرويد</h4><ol><li>افتح الموقع في <b>Chrome</b>.</li><li>اضغط زر القائمة '+dotsI+' أعلى الشاشة.</li><li>اختر <b>«تثبيت التطبيق»</b> أو <b>«إضافة إلى الشاشة الرئيسية»</b>.</li><li>اضغط <b>«تثبيت»</b>.</li></ol></section>';
+  o.innerHTML='<div class="tsheet ihelp"><div class="shead"><h3>أضف الموقع كتطبيق</h3><button class="pill sq" data-act="close" aria-label="إغلاق">✕</button></div><div class="ihead">'+LOGO+'<p>تظهر هذه الأيقونة على شاشتك، ويفتح الموقع منها بملء الشاشة دون شريط المتصفح.</p></div>'
+   +(instEvt?'<button class="btn primary big" data-act="install">ثبّت الآن</button>':'')+(isIOS?ios+and:and+ios)+'</div>';
+  document.body.appendChild(o);document.body.style.overflow='hidden';o.addEventListener('click',function(e){if(e.target===o)closeStudio()});
+}
+function doInstall(){
+  var b=$('#inst');if(b)b.remove();
+  if(instEvt){var e=instEvt;instEvt=null;e.prompt();(e.userChoice||Promise.resolve({})).then(function(r){if(r&&r.outcome==='accepted')LS.set('hikam-inst',{done:1});else LS.set('hikam-inst',{t:Date.now()})});closeStudio()}
+  else instHelp();
+}
+setTimeout(instBanner,6000);
 fontsReady();boot();
 })();
 </script>
