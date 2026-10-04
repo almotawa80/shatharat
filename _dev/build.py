@@ -10,6 +10,17 @@ for f in FILES:
             y['kind']=k
             if y.get('topic') in KIND_TOPICS: y.pop('topic')
         items.append(y)
+# keep each saying's id stable across rebuilds (shared links and favourites use it): reuse the id the same text had before, new texts get the next free number
+import os,re
+old={}
+if os.path.exists('seed.js'):
+    prev=json.loads(open('seed.js').read().split('=',1)[1].strip().rstrip(';'))
+    for i,x in enumerate(prev): old.setdefault(x['text'],x.get('id') or f'm{i+1}')
+nxt=max([int(v[1:]) for v in old.values() if re.fullmatch(r'm\d+',v)]+[0])+1
+for y in items:
+    if y['text'] in old: y['id']=old.pop(y['text'])
+    else: y['id']=f'm{nxt}';nxt+=1
+items=[{'id':y['id'],**{k:v for k,v in y.items() if k!='id'}} for y in items]
 seed='window.HIKAM_SEED='+json.dumps(items,ensure_ascii=False,separators=(',',':'))+';'
 open('seed.js','w').write(seed)
 s=open('index.html').read()
