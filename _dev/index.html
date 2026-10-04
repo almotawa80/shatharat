@@ -1175,9 +1175,14 @@ function drawCard(cv,x,tplId,sizeId,opt){
   if(showNote){c.font=noteSize+'px "IBM Plex Sans Arabic", sans-serif';noteLines=wrap(c,x.note,bw*0.9).slice(0,3)}
   var noteH=showNote?noteLines.length*noteSize*1.6+noteSize:0;
   var top=by+labH*1.6,bottom=by+bh-footH-noteH,avail=bottom-top;
-  var size=Math.round(W*0.1*(opt.scale||1)),lines,lh;
-  var lay=function(){c.font=F[2]+' '+size+'px "'+F[1]+'", serif';lines=wrap(c,x.text,bw);lh=size*F[3]};
-  lay();while((lines.length*lh>avail||lines.some(function(l){return tw(c,l)>bw}))&&size>W*0.025){size-=2;lay()}
+  var size=Math.round(W*0.1*(opt.scale||1)),lines,lh,lf=F[3];
+  var lay=function(){c.font=F[2]+' '+size+'px "'+F[1]+'", serif';lines=wrap(c,x.text,bw);lh=size*lf};
+  var bad=function(){return lines.length*lh>avail||lines.some(function(l){return tw(c,l)>bw})};
+  var fit=function(min){lay();while(bad()&&size>min){size-=2;lay()}};
+  fit(W*0.025);
+  /* very long sayings: drop the note, then tighten the leading and allow a smaller size so the text always stays inside the frame */
+  if(bad()&&showNote){showNote=false;noteH=0;bottom=by+bh-footH;avail=bottom-top;fit(W*0.025)}
+  if(bad()){lf=F[3]*0.86;fit(W*0.017)}
   var y=top+(avail-lines.length*lh)/2+lh/2;
   c.fillStyle=opt.ink||K.ink;lines.forEach(function(l){c.fillText(l,W/2,y);y+=lh});
   var ny=bottom+noteSize*0.5;

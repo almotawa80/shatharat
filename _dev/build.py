@@ -1,5 +1,5 @@
 import json
-FILES=['/mnt/project-files/sayings/sayings.json','/mnt/project-files/sayings/sayings_batch2.json']
+FILES=['/mnt/project-files/sayings/sayings.json','/mnt/project-files/sayings/sayings_batch2.json','/mnt/project-files/sayings/sayings_batch3.json']
 KIND_TOPICS={'طرفة':'tarfa','غزل':'ghazal'}
 items=[]
 for f in FILES:
