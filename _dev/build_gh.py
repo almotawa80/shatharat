@@ -1,6 +1,6 @@
 import json,os,shutil,re
 OUT='dist'; os.makedirs(OUT+'/icons',exist_ok=True)
-URL='https://almotawa80.github.io/shatharat/'
+URL='https://shatharaat.com/'
 frag=open('index.html').read()
 i=frag.index('<div id="app">')
 head,body=frag[:i],frag[i:]
