@@ -2,7 +2,7 @@
 <meta name="description" content="حكم وأمثال تُقرأ وتُشارَك في بطاقات مزخرفة.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&family=Reem+Kufi:wght@400;600;700&family=Noto+Naskh+Arabic:wght@600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&family=Reem+Kufi:wght@400;600;700&family=Noto+Naskh+Arabic:wght@600&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=El+Messiri:wght@700&family=Lateef:wght@700&family=Rakkas&family=Lalezar&family=Scheherazade+New:wght@700&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.js"></script>
 <style>
@@ -142,6 +142,14 @@ mark{background:color-mix(in srgb,var(--gold) 30%,transparent);color:inherit;bor
 .list-adm .r span{flex:1;min-width:0;font-family:var(--f-say);font-size:1.1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* studio */
+.tsheet{background:var(--surface);border-radius:18px;width:min(560px,100%);max-height:80vh;display:flex;flex-direction:column;padding:14px 16px;gap:10px}
+.tsheet .shead h3{margin:0}
+.tlist{overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;padding-bottom:6px}
+.tlist button{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:15px;cursor:pointer;text-align:start}
+.tlist button small{color:var(--muted);font-size:12px}
+.tlist button[aria-pressed=true]{background:var(--madder);color:var(--on-acc);border-color:var(--madder)}
+.tlist button[aria-pressed=true] small{color:var(--on-acc)}
+@media (max-width:760px){.tsheet{border-radius:18px 18px 0 0;width:100%;max-height:75vh;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}}
 #ov{position:fixed;inset:0;z-index:20;background:rgba(15,12,20,.72);display:flex;align-items:center;justify-content:center;padding:16px;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
 .studio{background:var(--surface);border-radius:18px;width:min(900px,100%);max-height:100%;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);grid-template-rows:auto 1fr auto;grid-template-areas:"pv head" "pv ctl" "pv bar";column-gap:18px;padding:16px}
 .shead{grid-area:head;display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -384,6 +392,7 @@ function themeIco(){var d=isDark();return d?'☀':'☾'}
 function isDark(){var r=document.documentElement;return r.dataset.theme?r.dataset.theme==='dark':(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)}
 
 var NAVI={
+ spark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l2.2 5.3L19.5 10.5l-5.3 2.2L12 18l-2.2-5.3L4.5 10.5l5.3-2.2z"/><path d="M18.5 16.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z" fill="currentColor" stroke="none"/></svg>',
  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11 12 4l9 7v9H5v-9"/></svg>',
  topics:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h10M4 18h6"/></svg>',
  dice:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg>',
@@ -413,7 +422,7 @@ function votdHtml(){
 function bbar(){
   return '<nav class="bbar" aria-label="التنقل"><button data-act="top" aria-pressed="'+(S.view==='home'&&!S.onlyFav)+'">'+NAVI.home+'الرئيسية</button><button data-act="totopics">'+NAVI.topics+'المواضيع</button>'
    +(S.canEdit?'<button class="plus" data-act="add" aria-label="إضافة حكمة"><span>+</span>إضافة</button>':'')
-   +'<button data-act="rand">'+NAVI.dice+'عشوائية</button><button data-act="onlyfav" aria-pressed="'+S.onlyFav+'">'+NAVI.heart+'مفضلتي</button></nav>';
+   +'<button data-act="rand">'+NAVI.spark+'اقتراح</button><button data-act="onlyfav" aria-pressed="'+S.onlyFav+'">'+NAVI.heart+'مفضلتي</button></nav>';
 }
 function filtersHtml(){
   var tps=topicsAll(),n=visible().length;
@@ -686,11 +695,162 @@ function paintBg(c,id,W,H,K){
     c.fillStyle='rgba(255,250,240,.58)';rr(c,W*0.08,H*0.22,W*0.84,H*0.56,36);c.fill();
     return [W*0.13,H*0.24,W*0.74,H*0.52];
   }
+  var ib=paintIslamic(c,id,W,H,K);if(ib)return ib;
   c.fillStyle=K.a;c.fillRect(0,0,W,H);
   c.fillStyle=alpha(K.c,.13);c.font='700 '+Math.round(W*0.5)+'px "Amiri", serif';c.textAlign='center';c.textBaseline='middle';c.fillText('”',W*0.5,H*0.24);
   c.fillStyle=K.c;c.fillRect(W*0.44,H*0.9,W*0.12,4);
   return [W*0.12,H*0.2,W*0.76,H*0.62];
 }
+/* ---------- Islamic and Arabic designs ---------- */
+[['sadu',[{n:'بني',a:'#f1e6d4',c:'#6b3b1f',d:'#1c1410',e:'#e0b25a',ink:'#2b1a0e',acc:'#6b3b1f',sub:'#6d5642'},{n:'برتقالي',a:'#f7ecdf',c:'#c2551d',d:'#2a160c',e:'#f2d48a',ink:'#2d170b',acc:'#a8441a',sub:'#73513b'}]],
+ ['najma',[{n:'فيروزي',a:'#0f6b6b',b:'#06302f',c:'#e8cf8a',d:'rgba(4,36,36,.82)',ink:'#f2f2e6',acc:'#e8cf8a',sub:'#b5d5d1'},{n:'بنفسجي',a:'#4b2a70',b:'#1a0d2b',c:'#e3c673',d:'rgba(26,12,40,.82)',ink:'#f5eefc',acc:'#ebcf86',sub:'#c8b6dd'}]],
+ ['scroll',[{n:'سماوي',a:'#e9f1f5',b:'#c9dbe6',c:'#2c5877',ink:'#14283a',acc:'#2c5877',sub:'#4f6578'},{n:'عسلي',a:'#f6e3bd',b:'#e3bf7c',c:'#7a4a12',ink:'#33200a',acc:'#7a4a12',sub:'#6b4f2a'}]],
+ ['night',[{n:'زمردي',a:'#0e4a3a',b:'#021510',c:'#e6cc84',ink:'#eef6f0',acc:'#e6cc84',sub:'#a9cbbd'},{n:'عنابي',a:'#55152a',b:'#14040a',c:'#ebcf86',ink:'#fbeef0',acc:'#ebcf86',sub:'#d6aab5'}]],
+ ['dunes',[{n:'ذهبي',a:'#fff1c9',b:'#f2c75c',c:'#b7852a',d:'#5d3d0b',ink:'#2e1f05',acc:'#7a520c',sub:'#5f4a24'}]],
+ ['plain',[{n:'وردي',a:'#fbecef',c:'#a03454',ink:'#2a1018',acc:'#a03454',sub:'#7a5260'},{n:'كحلي',a:'#121a33',c:'#d9b45a',ink:'#f1ecdf',acc:'#d9b45a',sub:'#a7aec4'}]]
+].forEach(function(p){var t=TPL.find(function(x){return x.id===p[0]});if(t)t.pals=t.pals.concat(p[1])});
+TPL.push(
+ {id:'mihrab',name:'محراب',pals:[
+   {n:'لازوردي',a:'#163d74',b:'#0a1c3a',c:'#d9b45a',d:'#fbf6ea',ink:'#1b2440',acc:'#8a6418',sub:'#5b6478'},
+   {n:'فيروزي',a:'#0f6670',b:'#06292e',c:'#e2c374',d:'#f6fbf8',ink:'#10302f',acc:'#0f6670',sub:'#4c6a68'},
+   {n:'طيني',a:'#9a4a2c',b:'#4a1d0e',c:'#f0cf86',d:'#fdf4e6',ink:'#3a1b0e',acc:'#9a4a2c',sub:'#7a5a48'},
+   {n:'زمردي',a:'#145c45',b:'#062a1f',c:'#e3c673',d:'#f7f6ec',ink:'#132a20',acc:'#145c45',sub:'#4d6a5c'},
+   {n:'ليلي',a:'#22222a',b:'#050507',c:'#d9b45a',d:'#16161c',ink:'#f4efe0',acc:'#e2c374',sub:'#a9a6b0'}]},
+ {id:'tazheeb',name:'تذهيب',pals:[
+   {n:'لازوردي',a:'#fbf5e6',c:'#1b3a78',d:'#c9a03c',ink:'#1c1a14',acc:'#a57c1c',sub:'#6b5d3c'},
+   {n:'قرمزي',a:'#fbf3ea',c:'#7e1d2a',d:'#c9a03c',ink:'#24120f',acc:'#7e1d2a',sub:'#6b4f45'},
+   {n:'زمردي',a:'#f6f6ea',c:'#155a43',d:'#c9a03c',ink:'#14231c',acc:'#155a43',sub:'#55665b'},
+   {n:'أسود',a:'#f7f2e6',c:'#1a1a1f',d:'#c9a03c',ink:'#16161a',acc:'#9a7418',sub:'#5f5a4c'}]},
+ {id:'zellij',name:'زليج',pals:[
+   {n:'أندلسي',a:'#f4efe4',c:'#1d4e89',d:'#1b7a5a',e:'#d4a537',p:'#fbf8f1',ink:'#18263a',acc:'#1d4e89',sub:'#55617a'},
+   {n:'مغربي',a:'#f6efe2',c:'#b5472b',d:'#2c6e6a',e:'#e0b04a',p:'#fdf8ef',ink:'#2b1a12',acc:'#b5472b',sub:'#6b5546'},
+   {n:'كويتي',a:'#eef3f3',c:'#0f7c86',d:'#13304f',e:'#d9b45a',p:'#fbfdfc',ink:'#0f2234',acc:'#0f7c86',sub:'#4b6170'},
+   {n:'ليلي',a:'#121520',c:'#2f5fa8',d:'#8a2d3a',e:'#d9b45a',p:'#171b27',ink:'#f1ece0',acc:'#e2c374',sub:'#a5abbb'}]},
+ {id:'mashrabiya',name:'مشربية',pals:[
+   {n:'جوزي',a:'#f5ead6',b:'#5a3519',c:'#3a200d',d:'#fbf5e9',ink:'#2d1a0b',acc:'#7a4a22',sub:'#6d5642'},
+   {n:'ساجي',a:'#f8eedc',b:'#8a5a2b',c:'#5c3a17',d:'#fdf8ee',ink:'#33210e',acc:'#8a5a2b',sub:'#735d44'},
+   {n:'أبيض',a:'#2a3a4a',b:'#efe9df',c:'#cfc6b6',d:'#fbf9f5',ink:'#1f2a36',acc:'#2a5a7a',sub:'#5b6875'},
+   {n:'أخضر',a:'#f1f0e2',b:'#2f4f3a',c:'#1d3326',d:'#f9f9f1',ink:'#17261c',acc:'#2f4f3a',sub:'#56665b'}]},
+ {id:'arabesque',name:'توريق',pals:[
+   {n:'عاجي',a:'#fbf6ea',b:'#f0e3c6',c:'#a57c1c',ink:'#2a2012',acc:'#8a6418',sub:'#6b5d45'},
+   {n:'كحلي',a:'#15244a',b:'#0a1228',c:'#d9b45a',ink:'#f3eedd',acc:'#e2c374',sub:'#aeb6d0'},
+   {n:'عنابي',a:'#f8ece9',b:'#efd3cc',c:'#8c2a3c',ink:'#2c1016',acc:'#8c2a3c',sub:'#76545b'},
+   {n:'زيتي',a:'#f1f2e4',b:'#dfe2c6',c:'#4d5a20',ink:'#232811',acc:'#4d5a20',sub:'#5d6447'}]},
+ {id:'minaret',name:'مآذن',pals:[
+   {n:'غروب',a:'#f7c98b',b:'#7b3f6e',d:'#2a1830',c:'#fff3d6',ink:'#2a1830',acc:'#7b3f6e',sub:'#6c5165'},
+   {n:'ليل',a:'#1e3570',b:'#070c22',d:'#03050f',c:'#f2d58a',ink:'#f3eedf',acc:'#f2d58a',sub:'#b2bad6'},
+   {n:'فجر',a:'#fde6e0',b:'#a6c8e6',d:'#2e4a66',c:'#ffffff',ink:'#1c2a3a',acc:'#2e4a66',sub:'#56677a'},
+   {n:'صحراء',a:'#fbe3b0',b:'#e09a52',d:'#5a2c12',c:'#fff6dc',ink:'#3a1c0a',acc:'#8e3f15',sub:'#6d4a33'}]}
+);
+function archPath(c,x0,x1,top,spring,bottom){
+  var w=x1-x0,cx=(x0+x1)/2;
+  c.beginPath();c.moveTo(x0,bottom);c.lineTo(x0,spring);
+  c.bezierCurveTo(x0,spring-(spring-top)*0.55,cx-w*0.12,top+(spring-top)*0.18,cx,top);
+  c.bezierCurveTo(cx+w*0.12,top+(spring-top)*0.18,x1,spring-(spring-top)*0.55,x1,spring);
+  c.lineTo(x1,bottom);c.closePath();
+}
+function cartouche(c,cx,cy,w,h){
+  var r=h/2;c.beginPath();c.moveTo(cx-w/2-r*0.9,cy);c.lineTo(cx-w/2+r*0.1,cy-r);c.lineTo(cx+w/2-r*0.1,cy-r);c.lineTo(cx+w/2+r*0.9,cy);c.lineTo(cx+w/2-r*0.1,cy+r);c.lineTo(cx-w/2+r*0.1,cy+r);c.closePath();
+}
+function vine(c,x,y,s,flipX,flipY,col){
+  /* a corner of scrolling vines (توريق): two spirals with leaves */
+  c.save();c.translate(x,y);c.scale(flipX?-1:1,flipY?-1:1);c.strokeStyle=col;c.fillStyle=col;c.lineCap='round';
+  var leaf=function(px,py,ang,len){c.save();c.translate(px,py);c.rotate(ang);c.beginPath();c.moveTo(0,0);c.quadraticCurveTo(len*0.5,-len*0.32,len,0);c.quadraticCurveTo(len*0.5,len*0.32,0,0);c.fill();c.restore()};
+  var spiral=function(ox,oy,r0,turns,rot){c.beginPath();for(var t=0;t<=turns*Math.PI*2;t+=0.08){var r=r0*(1-t/(turns*Math.PI*2)*0.85),px=ox+Math.cos(t+rot)*r,py=oy+Math.sin(t+rot)*r;t?c.lineTo(px,py):c.moveTo(px,py)}c.stroke()};
+  c.lineWidth=s*0.025;
+  c.beginPath();c.moveTo(0,s*0.05);c.bezierCurveTo(s*0.35,s*0.0,s*0.55,s*0.2,s*0.62,s*0.42);c.stroke();
+  c.beginPath();c.moveTo(s*0.05,0);c.bezierCurveTo(s*0.0,s*0.35,s*0.2,s*0.55,s*0.42,s*0.62);c.stroke();
+  spiral(s*0.62,s*0.3,s*0.13,1.1,Math.PI);spiral(s*0.3,s*0.62,s*0.13,1.1,0);
+  leaf(s*0.3,s*0.07,0.35,s*0.2);leaf(s*0.07,s*0.3,1.2,s*0.2);leaf(s*0.5,s*0.18,1.1,s*0.16);leaf(s*0.18,s*0.5,0.45,s*0.16);
+  c.beginPath();c.arc(s*0.1,s*0.1,s*0.05,0,7);c.fill();
+  c.restore();
+}
+function paintIslamic(c,id,W,H,K){
+  var m,i,j,x,y;
+  if(id==='mihrab'){
+    var g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,K.a);g.addColorStop(1,K.b);c.fillStyle=g;c.fillRect(0,0,W,H);
+    c.strokeStyle=alpha(K.c,.18);c.lineWidth=2;var s=W/7;for(j=0;j<=H/s+1;j++)for(i=0;i<=7;i++){star8Path(c,i*s+(j%2?s/2:0),j*s,s*0.36);c.stroke()}
+    var x0=W*0.1,x1=W*0.9,bottom=H-W*0.07,top=W*0.08,spring=top+Math.min(H*0.3,(x1-x0)*0.62);
+    c.fillStyle=K.c;archPath(c,x0-W*0.03,x1+W*0.03,top-W*0.035,spring,bottom+W*0.02);c.fill();
+    c.fillStyle=K.d;archPath(c,x0,x1,top,spring,bottom);c.fill();
+    c.strokeStyle=K.c;c.lineWidth=3;archPath(c,x0+W*0.025,x1-W*0.025,top+W*0.04,spring+W*0.01,bottom-W*0.025);c.stroke();
+    /* hanging lamp */
+    var lx=W/2,ly=top+(spring-top)*0.55;c.strokeStyle=K.c;c.fillStyle=K.c;c.lineWidth=2;c.beginPath();c.moveTo(lx,top+W*0.05);c.lineTo(lx,ly-W*0.03);c.stroke();
+    c.beginPath();c.moveTo(lx-W*0.04,ly-W*0.02);c.lineTo(lx+W*0.04,ly-W*0.02);c.lineTo(lx+W*0.025,ly+W*0.03);c.lineTo(lx-W*0.025,ly+W*0.03);c.closePath();c.fill();
+    c.beginPath();c.arc(lx,ly+W*0.045,W*0.012,0,7);c.fill();
+    /* column capitals */
+    [x0+W*0.012,x1-W*0.012].forEach(function(cx){c.fillStyle=K.c;c.fillRect(cx-W*0.012,spring-4,W*0.024,W*0.03)});
+    var by=ly+W*0.07;return [x0+W*0.08,by,x1-x0-W*0.16,bottom-W*0.05-by];
+  }
+  if(id==='tazheeb'){
+    c.fillStyle=K.a;c.fillRect(0,0,W,H);
+    m=W*0.075;c.fillStyle=K.c;c.fillRect(0,0,W,H);c.fillStyle=K.a;c.fillRect(m,m,W-2*m,H-2*m);
+    /* medallions along the border band */
+    c.fillStyle=K.d;var step=m*1.15;
+    for(x=m/2;x<W;x+=step){star8Path(c,x,m/2,m*0.3);c.fill();star8Path(c,x,H-m/2,m*0.3);c.fill()}
+    for(y=m/2+step;y<H-m;y+=step){star8Path(c,m/2,y,m*0.3);c.fill();star8Path(c,W-m/2,y,m*0.3);c.fill()}
+    c.fillStyle=K.c;for(x=m/2;x<W;x+=step){c.beginPath();c.arc(x,m/2,m*0.09,0,7);c.fill();c.beginPath();c.arc(x,H-m/2,m*0.09,0,7);c.fill()}
+    for(y=m/2+step;y<H-m;y+=step){c.beginPath();c.arc(m/2,y,m*0.09,0,7);c.fill();c.beginPath();c.arc(W-m/2,y,m*0.09,0,7);c.fill()}
+    c.strokeStyle=K.d;c.lineWidth=4;c.strokeRect(m+8,m+8,W-2*m-16,H-2*m-16);c.lineWidth=1.5;c.strokeRect(m+20,m+20,W-2*m-40,H-2*m-40);
+    /* head and foot cartouches */
+    var ch=W*0.085,cw=W*0.34,hy=m+20+ch*0.95;
+    c.fillStyle=K.c;cartouche(c,W/2,hy,cw,ch);c.fill();c.strokeStyle=K.d;c.lineWidth=3;cartouche(c,W/2,hy,cw,ch);c.stroke();
+    c.fillStyle=K.d;cartouche(c,W/2,H-hy,cw*0.6,ch*0.5);c.fill();
+    [[m+44,hy],[W-m-44,hy],[m+44,H-hy],[W-m-44,H-hy]].forEach(function(p){c.fillStyle=K.d;star8Path(c,p[0],p[1],ch*0.32);c.fill();c.fillStyle=K.a;c.beginPath();c.arc(p[0],p[1],ch*0.1,0,7);c.fill()});
+    var lab=W*0.05,bx=W*0.15,top2=hy-lab*0.5;
+    return [bx,top2,W-2*bx,H-hy-ch*0.6-top2];
+  }
+  if(id==='zellij'){
+    c.fillStyle=K.a;c.fillRect(0,0,W,H);
+    var z=W/8;
+    for(j=-1;j<=H/z+1;j++)for(i=-1;i<=9;i++){var cx=i*z,cy=j*z;
+      c.fillStyle=(i+j)%2?K.c:K.d;star8Path(c,cx,cy,z*0.47);c.fill();
+      c.fillStyle=K.e;c.beginPath();diamond(c,cx+z/2,cy+z/2,z*0.12,z*0.12);c.fill();
+      c.fillStyle=K.a;star8Path(c,cx,cy,z*0.16);c.fill()}
+    m=W*0.1;c.fillStyle=K.p;rr(c,m,m*1.1,W-2*m,H-2.2*m,28);c.fill();
+    c.strokeStyle=K.e;c.lineWidth=5;rr(c,m,m*1.1,W-2*m,H-2.2*m,28);c.stroke();c.strokeStyle=K.c;c.lineWidth=1.5;rr(c,m+14,m*1.1+14,W-2*m-28,H-2.2*m-28,20);c.stroke();
+    return [m+W*0.06,m*1.1+W*0.07,W-2*m-W*0.12,H-2.2*m-W*0.14];
+  }
+  if(id==='mashrabiya'){
+    c.fillStyle=K.a;c.fillRect(0,0,W,H);
+    m=W*0.13;var px=m,py=m*1.05,pw=W-2*m,ph=H-2.1*m;
+    c.save();c.beginPath();c.rect(0,0,W,H);c.rect(px,py,pw,ph);c.clip('evenodd');
+    c.fillStyle=K.b;c.fillRect(0,0,W,H);
+    var q=W/11,L2=H+W;c.fillStyle=K.a;c.fillRect(0,0,W,H);
+    c.strokeStyle=K.b;c.lineWidth=q*0.2;c.lineCap='butt';
+    for(var d=-L2;d<L2;d+=q){c.beginPath();c.moveTo(d,0);c.lineTo(d+H,H);c.stroke();c.beginPath();c.moveTo(d,0);c.lineTo(d-H,H);c.stroke()}
+    for(y=0;y<=H+q;y+=q/2)for(x=((y/(q/2))%2?q/2:0);x<=W+q;x+=q){c.fillStyle=K.b;c.beginPath();c.arc(x,y,q*0.2,0,7);c.fill();c.fillStyle=K.c;c.beginPath();c.arc(x,y,q*0.09,0,7);c.fill()}
+    c.strokeStyle=K.c;c.lineWidth=3;
+    c.restore();
+    c.fillStyle=K.d;c.fillRect(px,py,pw,ph);
+    c.strokeStyle=K.c;c.lineWidth=8;c.strokeRect(px,py,pw,ph);c.lineWidth=2;c.strokeRect(px+16,py+16,pw-32,ph-32);
+    return [px+W*0.06,py+W*0.06,pw-W*0.12,ph-W*0.12];
+  }
+  if(id==='arabesque'){
+    var g5=c.createRadialGradient(W/2,H/2,W*0.1,W/2,H/2,H*0.7);g5.addColorStop(0,K.a);g5.addColorStop(1,K.b);c.fillStyle=g5;c.fillRect(0,0,W,H);
+    m=W*0.05;c.strokeStyle=K.c;c.lineWidth=3;c.strokeRect(m,m,W-2*m,H-2*m);c.lineWidth=1.2;c.strokeRect(m+12,m+12,W-2*m-24,H-2*m-24);
+    var vs=W*0.3;vine(c,m+14,m+14,vs,false,false,K.c);vine(c,W-m-14,m+14,vs,true,false,K.c);vine(c,m+14,H-m-14,vs,false,true,K.c);vine(c,W-m-14,H-m-14,vs,true,true,K.c);
+    c.fillStyle=K.c;star8Path(c,W/2,m+12,W*0.03);c.fill();star8Path(c,W/2,H-m-12,W*0.03);c.fill();
+    return [W*0.14,H*0.13+W*0.04,W*0.72,H*0.74-W*0.08];
+  }
+  if(id==='minaret'){
+    var g6=c.createLinearGradient(0,0,0,H);g6.addColorStop(0,K.b);g6.addColorStop(0.75,K.a);c.fillStyle=g6;c.fillRect(0,0,W,H);
+    var r3=mulberry(5);c.fillStyle=alpha(K.c,.7);for(i=0;i<70;i++){c.beginPath();c.arc(r3()*W,r3()*H*0.45,r3()*2+0.6,0,7);c.fill()}
+    var mc=document.createElement('canvas');mc.width=mc.height=Math.round(W*0.14);var mx=mc.getContext('2d'),mr=W*0.04,mo=mc.width/2;mx.fillStyle=K.c;mx.beginPath();mx.arc(mo,mo,mr,0,7);mx.fill();mx.globalCompositeOperation='destination-out';mx.beginPath();mx.arc(mo+W*0.018,mo-W*0.008,mr*0.86,0,7);mx.fill();c.drawImage(mc,W*0.16-mo,H*0.075-mo);
+    /* skyline: domes and minarets */
+    var base=H*0.9;c.fillStyle=K.d;c.fillRect(0,base,W,H-base);
+    var dome=function(cx,w,h){c.beginPath();c.moveTo(cx-w/2,base);c.lineTo(cx-w/2,base-h*0.45);c.bezierCurveTo(cx-w/2,base-h*1.05,cx-w*0.05,base-h*1.05,cx,base-h*1.25);c.bezierCurveTo(cx+w*0.05,base-h*1.05,cx+w/2,base-h*1.05,cx+w/2,base-h*0.45);c.lineTo(cx+w/2,base);c.fill();c.fillRect(cx-1.5,base-h*1.42,3,h*0.2);c.beginPath();c.arc(cx,base-h*1.45,4,0,7);c.fill()};
+    var minaret=function(cx,w,h){c.fillRect(cx-w/2,base-h,w,h);c.fillRect(cx-w*0.8,base-h*0.72,w*1.6,6);c.fillRect(cx-w*0.8,base-h*0.4,w*1.6,6);c.beginPath();c.moveTo(cx-w*0.55,base-h);c.lineTo(cx,base-h-w*2.2);c.lineTo(cx+w*0.55,base-h);c.fill();c.fillRect(cx-1.2,base-h-w*2.9,2.4,w*0.8)};
+    dome(W*0.5,W*0.26,W*0.16);dome(W*0.31,W*0.13,W*0.085);dome(W*0.69,W*0.13,W*0.085);minaret(W*0.13,W*0.035,W*0.24);minaret(W*0.87,W*0.035,W*0.24);
+    c.fillRect(W*0.22,base-W*0.05,W*0.56,W*0.05);
+    var bt=H*0.075+W*0.07,bb=base-W*0.2;c.fillStyle=alpha(K.c,.78);rr(c,W*0.07,bt,W*0.86,bb-bt,30);c.fill();
+    return [W*0.12,bt+W*0.03,W*0.76,bb-bt-W*0.06];
+  }
+  return null;
+}
+CFONTS=CFONTS.concat([['المسيري','El Messiri',700,1.7],['لطيف','Lateef',700,1.6],['ركاز','Rakkas',400,1.6],['عريض','Lalezar',400,1.6],['شهرزاد','Scheherazade New',700,1.75]]);
+function loadFont(i){var f=CFONTS[i];if(!f||!document.fonts||!document.fonts.load)return Promise.resolve();return document.fonts.load(f[2]+' 60px "'+f[1]+'"','حكمة').catch(function(){})}
+
 function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
 function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function tw(c,t){var m=c.measureText(t);return Math.max(m.width,(m.actualBoundingBoxLeft||0)+(m.actualBoundingBoxRight||0))}
@@ -746,7 +906,7 @@ function optsHtml(){
 function openStudio(id){
   var x=byId(id);if(!x)return;
   ST.x=x;ST.tpl=suitTpl(x);ST.auto=true;
-  fontsReady().then(function(){
+  Promise.all([fontsReady(),loadFont(ST.font)]).then(function(){
     var o=$('#ov');if(o)o.remove();o=document.createElement('div');o.id='ov';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-label','بطاقة للمشاركة');
     o.innerHTML='<div class="studio"><div class="shead"><h3>بطاقة '+KIND[x.kind]+'</h3><button class="pill sq" data-act="close" aria-label="إغلاق">✕</button></div>'
      +'<div class="pv"><img id="cardimg" alt=""></div>'
@@ -764,6 +924,11 @@ function redraw(soft){
   var cv=ST.cv||(ST.cv=document.createElement('canvas'));drawCard(cv,ST.x,ST.tpl,ST.size,cardOpts());ST.url=cv.toDataURL('image/png');
   var im=$('#cardimg');if(im){im.src=ST.url;im.alt=ST.x.text+' — '+father()}
   if(!soft){var so=$('#sopts');if(so){var st=so.querySelector('.strip'),sl=st?st.scrollLeft:0;so.innerHTML=optsHtml();thumbs();st=so.querySelector('.strip');if(st)st.scrollLeft=sl}}
+}
+function openTopics(){
+  var o=$('#ov');if(o)o.remove();o=document.createElement('div');o.id='ov';o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-label','المواضيع');
+  o.innerHTML='<div class="tsheet"><div class="shead"><h3>المواضيع</h3><button class="pill sq" data-act="close" aria-label="إغلاق">✕</button></div><div class="tlist"><button data-act="pick" data-v="" aria-pressed="'+(!S.topic)+'">كل المواضيع<small>'+S.items.length+'</small></button>'+topicsAll().map(function(t){return '<button data-act="pick" data-v="'+esc(t[0])+'" aria-pressed="'+(S.topic===t[0])+'">'+esc(t[0])+'<small>'+t[1]+'</small></button>'}).join('')+'</div></div>';
+  document.body.appendChild(o);document.body.style.overflow='hidden';o.addEventListener('click',function(e){if(e.target===o)closeStudio()});
 }
 function closeStudio(){var o=$('#ov');if(o)o.remove();document.body.style.overflow=''}
 function urlBlob(u){var p=u.split(','),bin=atob(p[1]),a=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:'image/png'})}
@@ -863,11 +1028,12 @@ document.addEventListener('click',function(e){
    case 'card':if(x)openStudio(id);break;
    case 'wacard':if(x){fontsReady();sendCard(x,quickCard(x))}break;
    case 'top':if(S.view!=='home'){S.edit=null;history.replaceState(null,'',location.pathname+location.search);go('home')}else{S.onlyFav=false;S.rnd=null;render.keep=true;render();window.scrollTo({top:0,behavior:'smooth'})}break;
-   case 'totopics':if(S.view!=='home')go('home');var fl=$('#filters');if(fl)fl.scrollIntoView({behavior:'smooth',block:'start'});break;
+   case 'totopics':openTopics();break;
+   case 'pick':closeStudio();S.topic=el.dataset.v;S.kind='';S.onlyFav=false;S.shown=24;S.view='home';render();var li=$('#list');if(li)window.scrollTo(0,li.getBoundingClientRect().top+window.scrollY-130);break;
    case 'rand':var pool=S.items;if(pool.length){S.rnd=pool[Math.floor(Math.random()*pool.length)].id;if(S.view!=='home'){S.view='home'}if(window.innerWidth<=760&&el.closest('.bbar')){render.keep=true;render();openStudio(S.rnd)}else{render.keep=true;render()}}break;
    case 'clearq':S.q='';render.keep=true;render();break;
    case 'pal':ST.pal[ST.tpl]=+el.dataset.i;saveST();redraw();break;
-   case 'font':ST.font=+el.dataset.i;saveST();redraw();break;
+   case 'font':ST.font=+el.dataset.i;saveST();loadFont(ST.font).then(function(){THC={};redraw()});break;
    case 'scale':ST.scale=Math.max(.6,Math.min(1.4,Math.round((ST.scale+(+el.dataset.d)*.1)*10)/10));saveST();redraw();break;
    case 'watext':if(x)waText(x);break;
    case 'copy':if(x)copyText(x);break;
