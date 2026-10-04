@@ -336,14 +336,30 @@ h2.rel{font-family:var(--f-display);color:var(--madder);text-align:center;margin
 .facts .btn[disabled]{opacity:.4;cursor:default}
 
 .page:has(.fstack){overflow-x:clip;margin-inline:-16px;padding-inline:16px}
-.fstack{position:relative;max-width:720px;margin:0 auto 6px}
-.fstack::before,.fstack::after{content:"";position:absolute;inset:0;border-radius:22px;background:var(--surface);border:1px solid var(--line);z-index:0}
-.fstack::before{transform:translateY(12px) scale(.92);opacity:.5}
-.fstack::after{transform:translateY(6px) scale(.96);opacity:.8}
+/* ومضة: a deck of cards in the style of Diwan's — gold edge, soft gradient, two cards peeking from behind */
+.fstack{position:relative;max-width:460px;margin:6px auto 40px}
+.fstack::before,.fstack::after{content:"";position:absolute;inset:0;border-radius:24px;border:1px solid var(--gold);background:linear-gradient(165deg,var(--tint),var(--surface) 72%);z-index:0;box-shadow:0 10px 30px -12px rgba(0,0,0,.3)}
+.fstack::after{transform:translateY(16px) scale(.94);opacity:.85;transform-origin:50% 120%}
+.fstack::before{transform:translateY(32px) scale(.88);opacity:.55;transform-origin:50% 120%}
 .fstack .flash q{animation:none}
-.fstack .flash{position:relative;z-index:1;will-change:transform}
-.flash.rise{animation:fRise .38s cubic-bezier(.2,.8,.2,1) backwards}
-@keyframes fRise{from{transform:translateY(6px) scale(.96);opacity:.55}to{transform:none;opacity:1}}
+.fstack .flash{position:relative;z-index:1;will-change:transform;transform-origin:50% 120%}
+.flash.fcard{min-height:min(54vh,400px);display:grid;align-content:center;gap:12px;padding:52px 20px 26px;border-radius:24px;border:1px solid var(--gold);background:linear-gradient(165deg,var(--tint),var(--surface) 72%);box-shadow:0 18px 44px -10px rgba(0,0,0,.32);cursor:grab}
+.flash.fcard::after{content:"";position:absolute;inset:8px;border:1px solid var(--gold);border-radius:18px;opacity:.28;pointer-events:none}
+.flash.fcard q{margin:0 auto;font-size:calc(clamp(1.35rem,4.8vw,1.95rem) * var(--rs,1))}
+.flash.fcard .eyebrow{font-size:.85rem}
+.flash.fcard .by{color:var(--gold);font-size:1.1rem}
+.flspark{position:absolute;top:16px;left:50%;transform:translateX(-50%);color:var(--gold);line-height:0}
+.flspark svg{width:24px;height:24px;fill:currentColor}
+.fcard .ffav{position:absolute;top:12px;inset-inline-start:14px;z-index:2;border:0;background:none;color:var(--muted);padding:6px;cursor:pointer;line-height:0}
+.fcard .ffav svg{width:20px;height:20px}.fcard .ffav[aria-pressed="true"]{color:var(--madder)}
+.shint{transition:opacity .6s}.shint.off{opacity:0}
+.flbar{display:grid;grid-template-columns:54px 1fr 54px;gap:10px;max-width:460px;margin:0 auto}
+.flbar .btn{height:48px;border-radius:14px;justify-content:center}
+.flbar .btn.ic{display:grid;place-items:center;padding:0;background:var(--surface);border:1px solid var(--line);color:var(--madder)}
+.flbar .btn.ic:disabled{opacity:.35;cursor:default}
+.flbar .btn.ic svg{width:22px;height:22px}
+.flash.rise{animation:fRise .45s cubic-bezier(.2,.8,.2,1) backwards}
+@keyframes fRise{from{transform:translateY(16px) scale(.94);opacity:.85}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.flash.rise{animation:none}}
 /* bottom bar (phones) */
 .bbar{display:none}
@@ -717,6 +733,8 @@ function adminView(){
 var VIEWS={flash:1,quiz:1,fav:1,topics:1};
 function pageHead(t,sub){return '<header class="phead"><h1>'+t+'</h1>'+(sub?'<p>'+sub+'</p>':'')+'</header>'}
 function nextFlash(){var pool=real().filter(function(x){return !S.fk||x.kind===S.fk});if(!pool.length)pool=real();if(!pool.length)return;var n,i=0;do{n=pool[Math.floor(Math.random()*pool.length)].id;i++}while(n===S.flash&&pool.length>1&&i<9);S.flash=n}
+var FSPARK='<svg viewBox="0 0 24 24"><path d="M12 2.5c.8 4.6 2.9 7.2 9.5 9.5-6.6 2.3-8.7 4.9-9.5 9.5-.8-4.6-2.9-7.2-9.5-9.5 6.6-2.3 8.7-4.9 9.5-9.5z"/></svg>';
+var FUNDO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-4"/></svg>';
 function flashView(){
   var rise=S.fdir;S.fdir=0;
   if(!S.flash||!byId(S.flash)){nextFlash();S.fh=[S.flash];S.fi=0}var v=byId(S.flash);
@@ -724,8 +742,9 @@ function flashView(){
   var fav=v&&!!S.fav[v.id];
   return topbar()+'<div class="wrap page">'+pageHead('ومضة','حكمة مختارة عشوائيًا، تتجدد مع كل ضغطة.')
    +'<div class="seg fseg" role="group" aria-label="النوع">'+kinds.map(function(k){return '<button data-act="fk" data-v="'+k[0]+'" aria-pressed="'+((S.fk||'')===k[0])+'">'+k[1]+'</button>'}).join('')+'</div>'
-   +(v?'<div class="fstack"><section class="flash swipe'+(rise?' rise':'')+'" aria-live="polite"><span class="star8 a" aria-hidden="true">'+ICO.star+'</span><span class="star8 b" aria-hidden="true">'+ICO.star+'</span><div class="eyebrow">'+KIND[v.kind]+(v.topic?' · '+esc(v.topic):'')+'</div><q>'+esc(v.text)+'</q>'+(v.note?'<div class="mean">'+esc(v.note)+'</div>':'')+'<div class="by">'+esc(father())+'</div></section></div>'+('ontouchstart' in window?'<div class="shint">اسحب يمينًا أو يسارًا للتنقل</div>':'')
-   +'<div class="facts"><button class="btn ghost" data-act="flashprev" aria-label="السابقة"'+(S.fi>0?'':' disabled')+'>→</button><button class="btn primary big" data-act="flashnext">'+NAVI.spark+' ومضة أخرى</button><button class="btn wa" data-act="wacard" data-id="'+v.id+'">'+ICO.wa+' واتساب</button><button class="btn ghost" data-act="card" data-id="'+v.id+'">'+ICO.card+' بطاقة</button><button class="btn ghost" data-act="copy" data-id="'+v.id+'" aria-label="نسخ">'+ICO.copy+'</button><button class="btn ghost ffav" data-act="fav" data-id="'+v.id+'" aria-pressed="'+fav+'" aria-label="مفضلة">'+(fav?ICO.heartF:ICO.heart)+'</button></div>':'<div class="empty">لا توجد حكم بعد.</div>')
+   +(v?'<div class="fstack"><section class="flash swipe fcard'+(rise?' rise':'')+'" aria-live="polite"><span class="flspark" aria-hidden="true">'+FSPARK+'</span><button class="ffav" data-act="fav" data-id="'+v.id+'" aria-pressed="'+fav+'" aria-label="مفضلة">'+(fav?ICO.heartF:ICO.heart)+'</button><div class="eyebrow">'+KIND[v.kind]+(v.topic?' · '+esc(v.topic):'')+'</div><q>'+esc(v.text)+'</q>'+(v.note?'<div class="mean">'+esc(v.note)+'</div>':'')+'<div class="by">'+esc(father())+'</div></section></div>'
+   +('ontouchstart' in window?'<p class="shint'+(LS.get('hikam-flh',0)<3?'':' off')+'">اسحب البطاقة يمينًا أو يسارًا</p>':'')
+   +'<div class="flbar"><button class="btn ic" data-act="flashprev" aria-label="السابقة" title="السابقة"'+(S.fi>0?'':' disabled')+'>'+FUNDO+'</button><button class="btn primary" data-act="flashnext">ومضة أخرى</button><button class="btn ic" data-act="card" data-id="'+v.id+'" aria-label="مشاركة كصورة" title="مشاركة كصورة">'+NAVI.share+'</button></div>':'<div class="empty">لا توجد حكم بعد.</div>')
    +'</div>'+bbar();
 }
 function favView(){
@@ -816,11 +835,12 @@ var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches
 function flyFlash(dir,fromX){
   var el=$('.flash.swipe');if(!el||RM){flashGo(dir);return}
   if(dir<0&&!(S.fi>0)){el.style.transition='transform .3s cubic-bezier(.2,.8,.2,1)';el.style.transform='';return}
-  el.classList.remove('rise');var w=window.innerWidth,out=(dir>0?-1:1)*(w*0.9+200);
-  el.style.transition='transform .26s cubic-bezier(.4,0,.9,.5),opacity .26s ease';
-  el.style.transform='translateX('+out+'px) rotate('+(dir>0?-9:9)+'deg)';el.style.opacity='0';
+  el.classList.remove('rise');var w=window.innerWidth,out=(dir>0?-1:1)*(w*1.1);
+  el.style.transition='transform .42s cubic-bezier(.25,.7,.35,1),opacity .42s ease-in';
+  el.style.transform='translate('+out+'px,-30px) rotate('+(dir>0?-26:26)+'deg)';el.style.opacity='0';
+  var hc=LS.get('hikam-flh',0);if(hc<3)LS.set('hikam-flh',hc+1);
   var done=false,fin=function(){if(done)return;done=true;S.fdir=dir;flashGo(dir)};
-  el.addEventListener('transitionend',fin,{once:true});setTimeout(fin,320);
+  el.addEventListener('transitionend',fin,{once:true});setTimeout(fin,470);
 }
 (function(){var sx=0,sy=0,dx=0,el=null,lock=0,t0=0,raf=0;
  document.addEventListener('touchstart',function(e){var f=e.target.closest&&e.target.closest('.flash.swipe');if(!f||e.target.closest('button'))return;el=f;f.classList.remove('rise');sx=e.touches[0].clientX;sy=e.touches[0].clientY;dx=0;lock=0;t0=Date.now();el.style.transition='none'},{passive:true});
