@@ -196,6 +196,12 @@ mark{background:color-mix(in srgb,var(--gold) 30%,transparent);color:inherit;bor
 .strip>button{flex:none;border:2px solid transparent;background:none;border-radius:12px;padding:3px;cursor:pointer;display:grid;justify-items:center;gap:2px;font-size:.74rem;color:var(--muted)}
 .strip>button[aria-pressed="true"]{border-color:var(--madder);color:var(--ink);font-weight:600}
 .tpl canvas{width:52px;height:52px;border-radius:9px;display:block}
+.strip.grid3,.strip.grid4,.strip.grid5,.strip.grid6{display:grid;overflow:visible;gap:6px;padding:2px 0 4px}
+.strip.grid3{grid-template-columns:repeat(3,minmax(0,1fr))}.strip.grid4{grid-template-columns:repeat(4,minmax(0,1fr))}.strip.grid5{grid-template-columns:repeat(5,minmax(0,1fr))}.strip.grid6{grid-template-columns:repeat(6,minmax(0,1fr))}
+.strip.grid5>button,.strip.grid4>button,.strip.grid6>button,.strip.grid3>button{min-width:0;width:100%}
+.strip.grid5 .tpl canvas{width:100%;height:auto;aspect-ratio:4/5;border-radius:8px;box-shadow:0 4px 12px -6px rgba(0,0,0,.35)}
+.strip.grid4 .pal i{width:min(48px,100%);height:auto;aspect-ratio:1}
+.strip.grid5 .fnt b{width:100%;height:40px;font-size:1.05rem}
 .pal i{display:block;width:44px;height:44px;border-radius:50%;position:relative;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
 .pal i b{position:absolute;width:14px;height:14px;border-radius:50%;bottom:2px;inset-inline-start:2px;box-shadow:0 0 0 2px var(--surface)}
 .fnt b{display:grid;place-items:center;width:50px;height:36px;border-radius:8px;background:var(--tint);font-size:1rem;color:var(--ink);font-weight:700}
@@ -946,13 +952,6 @@ var TPL=[
 ];
 var CFONTS=[['أميري','Amiri',700,1.75],['رقعة','Aref Ruqaa',700,1.7],['كوفي','Reem Kufi',600,1.65],['نسخ','Noto Naskh Arabic',600,1.8]];
 function tplOf(id){return TPL.find(function(t){return t.id===id})||TPL[0]}
-function suitTpl(x){
-  if(/الإيمان|العبادة|الدين/.test(x.topic)||/الله/.test(x.text))return 'najma';
-  if(/الزمن|الليل|العمر|الدهر/.test(x.topic))return 'night';
-  if(x.kind==='tarfa')return 'dunes';
-  if(x.kind==='ghazal')return 'night';
-  return x.kind==='mathal'?'sadu':'scroll';
-}
 var ST=Object.assign({x:null,tpl:'',auto:true,pal:{},size:'post',font:0,scale:1,note:true,site:true,label:true,url:''},LS.get('hikam-card',{}));
 ST.x=null;ST.cv=null;
 function saveST(){LS.set('hikam-card',{ink:ST.ink||'',pal:ST.pal,size:ST.size,font:ST.font,scale:ST.scale,note:ST.note,site:ST.site,label:ST.label})}
@@ -983,6 +982,7 @@ function cornerOrn(c,x,y,s,rot,col){
 }
 function alpha(hex,a){var h=hex.replace('#','');if(h.length!==6)return hex;return 'rgba('+parseInt(h.slice(0,2),16)+','+parseInt(h.slice(2,4),16)+','+parseInt(h.slice(4,6),16)+','+a+')'}
 function paintBg(c,id,W,H,K){
+  var pb=paintPremium(c,id,W,H,K);if(pb)return pb;
   /* draws the design; returns the safe text box */
   if(id==='sadu'){
     c.fillStyle=K.a;c.fillRect(0,0,W,H);
@@ -1217,6 +1217,97 @@ function drawCard(cv,x,tplId,sizeId,opt){
   var nw=c.measureText(nm).width/2+22;diamond(c,W/2+nw,fy+4,7,9);c.fill();diamond(c,W/2-nw,fy+4,7,9);c.fill();
   if(opt.site){c.fillStyle=K.sub;c.font=siteSize+'px "IBM Plex Sans Arabic", sans-serif';c.fillText(siteName(),W/2,fy+nameSize*0.9+siteSize)}
 }
+/* ---------- the five card designs: calm ivory pages with one quiet motif each (quote mark, Andalusian arch, star, desert, Sadu) ---------- */
+TPL=[
+ {id:'iqtibas',name:'اقتباس',pals:[
+   {n:'عاجي',a:'#fffdf8',c:'#9b2c1f',ink:'#1d2230',acc:'#9b2c1f',sub:'#5d6577'},
+   {n:'رملي',a:'#f6efe2',c:'#8a5a1e',ink:'#2b2014',acc:'#8a5a1e',sub:'#6a5a44'},
+   {n:'زيتوني',a:'#f1f3ec',c:'#3f5a3a',ink:'#1b2419',acc:'#3f5a3a',sub:'#5b6658'},
+   {n:'ليلي',a:'#17171c',c:'#d9b46a',ink:'#f3eee2',acc:'#d9b46a',sub:'#a5a3ab'}]},
+ {id:'andalus',name:'أندلسي',pals:[
+   {n:'عاجي',a:'#fdfaf2',c:'#a8843c',ink:'#22201a',acc:'#8a6a28',sub:'#6f6553'},
+   {n:'وردي',a:'#fbf3f0',c:'#a0525a',ink:'#2c1c1c',acc:'#8a3f48',sub:'#7a6060'},
+   {n:'فيروزي',a:'#f3f8f6',c:'#2f6f70',ink:'#16292a',acc:'#2a6566',sub:'#566c6b'},
+   {n:'ليلي',a:'#1a1e28',c:'#c9a865',ink:'#efe8d8',acc:'#d6b878',sub:'#a3a6b0'}]},
+ {id:'najma',name:'نجمة',pals:[
+   {n:'عاجي',a:'#fffcf5',c:'#1f4e46',ink:'#1a2422',acc:'#1f5a4e',sub:'#5b6a66'},
+   {n:'لازوردي',a:'#f6f7fb',c:'#24407a',ink:'#18203a',acc:'#24407a',sub:'#5a6278'},
+   {n:'ذهبي',a:'#fbf6ea',c:'#a8843c',ink:'#262014',acc:'#8a6a28',sub:'#6f6553'},
+   {n:'زمردي',a:'#132a25',c:'#d4b673',ink:'#f1ecdc',acc:'#dcc285',sub:'#a9bdb5'}]},
+ {id:'sahra',name:'صحراء',pals:[
+   {n:'فجر',a:'#fdf8f1',b:'#f6e6d2',c:'#c48a5a',ink:'#2e2116',acc:'#9a5a30',sub:'#7a6452'},
+   {n:'ضحى',a:'#fbfaf5',b:'#f1e7cf',c:'#b8955a',ink:'#2a2619',acc:'#8a6a2c',sub:'#6f6655'},
+   {n:'غروب',a:'#fcf4f1',b:'#f3dccf',c:'#b4705a',ink:'#30201a',acc:'#8a3f2c',sub:'#7a5d54'},
+   {n:'ليل',a:'#1a1d29',b:'#262532',c:'#d9bd80',ink:'#f1e8d6',acc:'#d9bd80',sub:'#a9a6b2'}]},
+ {id:'sadu',name:'سدو',pals:[
+   {n:'وبر',a:'#fdf9f2',c:'#8e3a26',d:'#2a211c',e:'#d2a24c',ink:'#26201a',acc:'#8e3a26',sub:'#76624f'},
+   {n:'نيلي',a:'#f8f9fb',c:'#2c4a78',d:'#1c2230',e:'#cfa556',ink:'#1c2330',acc:'#2c4a78',sub:'#5f6878'},
+   {n:'رمادي',a:'#f6f5f2',c:'#6e5a4a',d:'#2a2724',e:'#c49a52',ink:'#25221f',acc:'#6e5a4a',sub:'#6d6862'},
+   {n:'ليلي',a:'#1c1a18',c:'#9a4a32',d:'#0f0d0c',e:'#d2a24c',ink:'#efe6d6',acc:'#d8b06a',sub:'#a39a8e'}]}
+];
+function softBand(c,W,y,h,K){
+  /* a slim, quiet Sadu stripe: two coloured rules, a dark field with a fine zigzag and small gold diamonds */
+  var cream='#efe6d6';
+  c.fillStyle=K.c;c.fillRect(0,y,W,h);
+  var t=h*0.16;c.fillStyle=K.d;c.fillRect(0,y+t,W,h-2*t);
+  var by=y+t,bh=h-2*t,step=bh*2.2;c.strokeStyle=alpha(cream,.8);c.lineWidth=Math.max(2,h*0.06);c.beginPath();
+  for(var i=-1;i*step<W+step;i++){var x0=i*step;c.moveTo(x0,by+bh*0.82);c.lineTo(x0+step/2,by+bh*0.18);c.lineTo(x0+step,by+bh*0.82)}c.stroke();
+  c.fillStyle=K.e;for(i=-1;i*step<W+step;i++){diamond(c,i*step+step/2,by+bh*0.62,bh*0.11,bh*0.15);c.fill();diamond(c,i*step+step,by+bh*0.38,bh*0.08,bh*0.11);c.fill()}
+}
+function paintPremium(c,id,W,H,K){
+  var g,i,m=Math.min(W,H),box=[W*0.12,H*0.2,W*0.76,H*0.62];
+  var base=function(){if(K.b){g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,K.a);g.addColorStop(1,K.b);c.fillStyle=g}else c.fillStyle=K.a;c.fillRect(0,0,W,H)};
+  var rule=function(){c.fillStyle=K.c;c.fillRect(W*0.44,H*0.9,W*0.12,4)};
+  if(id==='iqtibas'){
+    base();c.fillStyle=alpha(K.c,.13);c.font='700 '+Math.round(W*0.5)+'px "Amiri", serif';c.textAlign='center';c.textBaseline='middle';c.fillText('”',W*0.5,H*0.24);
+    rule();return box;
+  }
+  if(id==='andalus'){
+    /* one fine horseshoe-pointed arch drawn as a single line, with a small rosette at its crown */
+    base();var x0=W*0.09,x1=W*0.91,top=m*0.07,spring=top+(x1-x0)*0.4,bottom=H-m*0.07;
+    c.strokeStyle=alpha(K.c,.45);c.lineWidth=2.2;archPath(c,x0,x1,top,spring,bottom);c.stroke();
+    c.strokeStyle=alpha(K.c,.18);c.lineWidth=1.2;archPath(c,x0+W*0.022,x1-W*0.022,top+W*0.03,spring+W*0.01,bottom-W*0.022);c.stroke();
+    c.fillStyle=alpha(K.c,.75);star8Path(c,W/2,top,W*0.022);c.fill();c.fillStyle=K.a;c.beginPath();c.arc(W/2,top,W*0.008,0,7);c.fill();
+    c.fillStyle=alpha(K.c,.45);[x0,x1].forEach(function(px){c.fillRect(px-W*0.012,spring-1,W*0.024,3)});
+    rule();return [W*0.16,Math.max(top+W*0.17,H*0.2),W*0.68,H*0.62];
+  }
+  if(id==='najma'){
+    /* a large, faint eight-pointed star where the quote mark would be, echoed by a thin ring */
+    base();var sr=W*0.12,sy=Math.max(H*0.14,sr+m*0.06);
+    c.fillStyle=alpha(K.c,.1);star8Path(c,W/2,sy,sr);c.fill();
+    c.strokeStyle=alpha(K.c,.22);c.lineWidth=2;star8Path(c,W/2,sy,sr*0.62);c.stroke();
+    c.beginPath();c.arc(W/2,sy,sr*0.2,0,7);c.stroke();
+    c.fillStyle=K.c;diamond(c,W/2,H*0.9,7,9);c.fill();c.fillRect(W*0.4,H*0.9-1,W*0.07,2);c.fillRect(W*0.53,H*0.9-1,W*0.07,2);
+    return [W*0.12,sy+sr+m*0.03,W*0.76,H*0.86-sy-sr-m*0.03];
+  }
+  if(id==='sahra'){
+    base();
+    var dark=K.ink.charAt(1)>'c';
+    if(dark){var r=mulberry(5);for(i=0;i<90;i++){c.fillStyle='rgba(255,246,220,'+(0.12+r()*0.35)+')';c.beginPath();c.arc(r()*W,r()*H*0.6,r()*1.6+0.5,0,7);c.fill()}}
+    var mc=document.createElement('canvas'),mr=W*0.04;mc.width=mc.height=Math.round(mr*3);var mx=mc.getContext('2d'),mo=mc.width/2;
+    mx.fillStyle=K.c;mx.beginPath();mx.arc(mo,mo,mr,0,7);mx.fill();mx.globalCompositeOperation='destination-out';mx.beginPath();mx.arc(mo-mr*0.4,mo-mr*0.12,mr*0.9,0,7);mx.fill();
+    c.globalAlpha=dark?0.85:0.55;c.drawImage(mc,W/2-mo,H*0.12-mo);c.globalAlpha=1;
+    var dune=function(y0,amp,col,ph,fr){c.fillStyle=col;c.beginPath();c.moveTo(0,H);for(var x=0;x<=W;x+=8)c.lineTo(x,y0-Math.sin(x/W*Math.PI*fr+ph)*amp-Math.sin(x/W*Math.PI*fr*2.3+ph*1.7)*amp*0.25);c.lineTo(W,H);c.closePath();c.fill()};
+    dune(H*0.86,H*0.03,alpha(K.c,.14),0.4,1.3);dune(H*0.91,H*0.025,alpha(K.c,.22),2.1,1.1);dune(H*0.96,H*0.018,alpha(K.c,.32),3.6,1.5);
+    return [W*0.12,H*0.2,W*0.76,H*0.6];
+  }
+  if(id==='sadu'){
+    base();var bh2=Math.round(m*0.06),bb=H-bh2-m*0.06;
+    softBand(c,W,bb,bh2,K);
+    c.fillStyle=alpha(K.c,.55);var tt=H*0.1;diamond(c,W/2,tt,9,12);c.fill();diamond(c,W/2-28,tt,5,7);c.fill();diamond(c,W/2+28,tt,5,7);c.fill();
+    return [W*0.12,H*0.18,W*0.76,bb-H*0.18-m*0.06];
+  }
+  return null;
+}
+function suitTpl(x){
+  if(/الإيمان|العبادة|الدين/.test(x.topic)||/الله/.test(x.text))return 'najma';
+  if(/الزمن|الليل|العمر|الدهر|الحياة/.test(x.topic)||x.kind==='tarfa')return 'sahra';
+  if(x.kind==='ghazal')return 'andalus';
+  if(x.kind==='mathal')return 'sadu';
+  return 'iqtibas';
+}
+CFONTS=CFONTS.slice(0,5);if(!(ST.font<CFONTS.length))ST.font=0;
+var INKS6=[['','تلقائي'],['#1b1a17','أسود'],['#ffffff','أبيض'],['#f3e6c4','عاجي'],['#c9a03c','ذهبي'],['#8a2f2f','عنابي']];if(ST.ink&&!INKS6.some(function(k){return k[0]===ST.ink}))ST.ink='';
 var fontsP=null;
 function fontsReady(){
   if(fontsP)return fontsP;
@@ -1229,13 +1320,12 @@ ST.tab='tpl';
 var INKS=[['','تلقائي'],['#1b1a17','أسود'],['#ffffff','أبيض'],['#f3e6c4','عاجي'],['#c9a03c','ذهبي'],['#9b2c1f','عنابي'],['#1d3a6e','كحلي'],['#145c45','زمردي'],['#5a3519','بني']];
 function optsHtml(){
   var t=tplOf(ST.tpl),h='';
-  if(ST.tab==='tpl')h='<div class="strip">'+TPL.map(function(t){return '<button class="tpl" data-act="tpl" data-v="'+t.id+'" aria-pressed="'+(ST.tpl===t.id)+'" title="'+t.name+'"><canvas data-th="'+t.id+'" width="120" height="120"></canvas><span>'+t.name+'</span></button>'}).join('')+'</div>';
-  else if(ST.tab==='pal')h='<div class="strip">'+t.pals.map(function(K,i){return '<button class="pal" data-act="pal" data-i="'+i+'" aria-pressed="'+((ST.pal[ST.tpl]||0)===i)+'" title="'+K.n+'"><i style="background:linear-gradient(135deg,'+K.a+','+(K.b||K.a)+')"><b style="background:'+K.acc+'"></b></i><span>'+K.n+'</span></button>'}).join('')+'</div>';
-  else if(ST.tab==='font')h='<div class="slab">نوع الخط</div><div class="strip">'+CFONTS.map(function(f,i){return '<button class="fnt" data-act="font" data-i="'+i+'" aria-pressed="'+(ST.font===i)+'"><b style="font-family:\''+f[1]+'\',serif">حكمة</b><span>'+f[0]+'</span></button>'}).join('')+'</div>'
-   +'<div class="slab">لون الخط</div><div class="strip inks">'+INKS.map(function(k){var on=(ST.ink||'')===k[0];return '<button class="ink" data-act="ink" data-v="'+k[0]+'" aria-pressed="'+on+'" title="'+k[1]+'"><i'+(k[0]?' style="background:'+k[0]+'"':' class="auto"')+'></i><span>'+k[1]+'</span></button>'}).join('')
-   +'<label class="ink cust'+(ST.ink&&!INKS.some(function(k){return k[0]===ST.ink})?' on':'')+'" title="لون مخصص"><input type="color" id="inkpick" value="'+(ST.ink||'#333333')+'"><i></i><span>مخصص</span></label></div>';
+  if(ST.tab==='tpl')h='<div class="strip grid5">'+TPL.map(function(t){return '<button class="tpl" data-act="tpl" data-v="'+t.id+'" aria-pressed="'+(ST.tpl===t.id)+'" title="'+t.name+'"><canvas data-th="'+t.id+'" width="96" height="120"></canvas><span>'+t.name+'</span></button>'}).join('')+'</div>';
+  else if(ST.tab==='pal')h='<div class="strip grid4">'+t.pals.map(function(K,i){return '<button class="pal" data-act="pal" data-i="'+i+'" aria-pressed="'+((ST.pal[ST.tpl]||0)===i)+'" title="'+K.n+'"><i style="background:linear-gradient(135deg,'+K.a+','+(K.b||K.a)+')"><b style="background:'+K.acc+'"></b></i><span>'+K.n+'</span></button>'}).join('')+'</div>';
+  else if(ST.tab==='font')h='<div class="slab">نوع الخط</div><div class="strip grid5">'+CFONTS.map(function(f,i){return '<button class="fnt" data-act="font" data-i="'+i+'" aria-pressed="'+(ST.font===i)+'"><b style="font-family:\''+f[1]+'\',serif">حكمة</b><span>'+f[0]+'</span></button>'}).join('')+'</div>'
+   +'<div class="slab">لون الخط</div><div class="strip inks grid6">'+INKS6.map(function(k){var on=(ST.ink||'')===k[0];return '<button class="ink" data-act="ink" data-v="'+k[0]+'" aria-pressed="'+on+'" title="'+k[1]+'"><i'+(k[0]?' style="background:'+k[0]+'"':' class="auto"')+'></i><span>'+k[1]+'</span></button>'}).join('')+'</div>';
   else h='<div class="szrow"><button class="pill sq" data-act="scale" data-d="-1" aria-label="تصغير الخط">أ−</button><input id="scale" type="range" min="60" max="140" step="5" value="'+Math.round(ST.scale*100)+'" aria-label="حجم الخط"><button class="pill sq" data-act="scale" data-d="1" aria-label="تكبير الخط">أ+</button></div>'
-   +'<div class="strip">'+SIZES.map(function(s){var r=s[3]/s[2];return '<button class="szb" data-act="size" data-v="'+s[0]+'" aria-pressed="'+(ST.size===s[0])+'"><i style="width:'+Math.round(22/Math.max(r,1))+'px;height:'+Math.round(22*Math.min(r,1.78))+'px"></i><span>'+s[1]+'</span></button>'}).join('')
+   +'<div class="strip grid3">'+SIZES.map(function(s){var r=s[3]/s[2];return '<button class="szb" data-act="size" data-v="'+s[0]+'" aria-pressed="'+(ST.size===s[0])+'"><i style="width:'+Math.round(22/Math.max(r,1))+'px;height:'+Math.round(22*Math.min(r,1.78))+'px"></i><span>'+s[1]+'</span></button>'}).join('')
    +'</div><div class="tgls">'+(ST.x.note?'<label class="tgl"><input type="checkbox" data-act="optnote"'+(ST.note?' checked':'')+'>المعنى</label>':'')+'<label class="tgl"><input type="checkbox" data-act="optlabel"'+(ST.label?' checked':'')+'>كلمة «'+KIND[ST.x.kind]+'»</label><label class="tgl"><input type="checkbox" data-act="optsite"'+(ST.site?' checked':'')+'>اسم الموقع</label></div>';
   return '<div class="stabs" role="tablist">'+STABS.map(function(b){return '<button role="tab" data-act="stab" data-v="'+b[0]+'" aria-selected="'+(ST.tab===b[0])+'">'+b[2]+'<span>'+b[1]+'</span></button>'}).join('')+'</div><div class="spane">'+h+'</div>';
 }
@@ -1254,7 +1344,7 @@ function openStudio(id){
     thumbs();redraw();$('[data-act="close"]',o).focus();
   });
 }
-var THC={};function thumbs(){[].forEach.call(document.querySelectorAll('#ov canvas[data-th]'),function(cv){var k=cv.dataset.th+'|'+(ST.pal[cv.dataset.th]||0)+'|'+ST.font;if(!THC[k]){var tmp=document.createElement('canvas');drawCard(tmp,{kind:ST.x.kind,text:'حكمة',note:''},cv.dataset.th,'square',{note:false,site:false,label:false,font:ST.font});var sm=document.createElement('canvas');sm.width=sm.height=120;sm.getContext('2d').drawImage(tmp,0,0,120,120);THC[k]=sm}cv.getContext('2d').drawImage(THC[k],0,0)})}
+var THC={};function thumbs(){[].forEach.call(document.querySelectorAll('#ov canvas[data-th]'),function(cv){var k=cv.dataset.th+'|'+(ST.pal[cv.dataset.th]||0)+'|'+ST.font;if(!THC[k]){var tmp=document.createElement('canvas');drawCard(tmp,{kind:ST.x.kind,text:'حكمة',note:''},cv.dataset.th,'post',{note:false,site:false,label:false,font:ST.font});var sm=document.createElement('canvas');sm.width=96;sm.height=120;sm.getContext('2d').drawImage(tmp,0,0,96,120);THC[k]=sm}cv.getContext('2d').drawImage(THC[k],0,0)})}
 function cardOpts(){return {note:ST.note,site:ST.site,label:ST.label,font:ST.font,scale:ST.scale,ink:ST.ink}}
 function redraw(soft){
   var cv=ST.cv||(ST.cv=document.createElement('canvas'));drawCard(cv,ST.x,ST.tpl,ST.size,cardOpts());ST.url=cv.toDataURL('image/png');
