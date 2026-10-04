@@ -27,17 +27,17 @@
   --f-display:'Aref Ruqaa','Amiri',serif; --f-say:'Amiri','Traditional Arabic',serif; --f-kufi:'Reem Kufi','IBM Plex Sans Arabic',sans-serif; --f-ui:'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif;
   --sh:0 1px 0 rgba(60,40,20,.04),0 8px 24px -14px rgba(60,40,20,.25);
   /* the masthead keeps one dark woven look in both themes */
-  --hero-bg:#efe5d3; --hero-ink:#22202b; --hero-gold:#9b2c1f; --hero-muted:#6a6372; --hero-glass:rgba(255,255,255,.62); --hero-line:rgba(155,44,31,.2); --hero-field:rgba(255,255,255,.78); --hero-on:#ffffff; --wa:#1f8f4e; --tb:58px;
+  --hero-bg:#efe5d3; --hero-ink:#22202b; --hero-gold:#9b2c1f; --hero-muted:#6a6372; --hero-glass:rgba(255,255,255,.62); --hero-line:rgba(155,44,31,.2); --hero-field:rgba(255,255,255,.78); --hero-on:#ffffff; --wa:#1f8f4e; --tb:58px; --hero-pat:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cg fill='none' stroke='%23e8c67a' stroke-opacity='.07' stroke-width='1.4'%3E%3Cpath d='M48 14l10 24 24 10-24 10-10 24-10-24-24-10 24-10z'/%3E%3Crect x='30' y='30' width='36' height='36' transform='rotate(45 48 48)'/%3E%3Ccircle cx='0' cy='0' r='10'/%3E%3Ccircle cx='96' cy='0' r='10'/%3E%3Ccircle cx='0' cy='96' r='10'/%3E%3Ccircle cx='96' cy='96' r='10'/%3E%3C/g%3E%3C/svg%3E");
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#1c1b19; --surface:#252320; --ink:#e3dccf; --muted:#a39b8d; --line:#37342f; --tint:#2c2a26;
     --hero-bg:#211f1c; --hero-ink:#e6dfd1; --hero-gold:#d2b277; --hero-muted:#b0a796; --hero-glass:rgba(255,255,255,.03); --hero-line:rgba(210,178,119,.22); --hero-field:rgba(255,255,255,.06); --hero-on:#1c1b19;
-  --madder:#cf8f7b; --gold:#cbab6c; --indigo:#a7aacb; --on-acc:#1c1b19; --danger:#d99a92; --ok:#8fbf9f; --wa:#2f7a52; --sadu-f:brightness(.62) saturate(.7); color-scheme:dark;
+  --madder:#cf8f7b; --gold:#cbab6c; --indigo:#a7aacb; --on-acc:#1c1b19; --danger:#d99a92; --ok:#8fbf9f; --wa:#2f7a52; --sadu-f:brightness(.62) saturate(.7); --hero-pat:none; color-scheme:dark;
   --sh:0 1px 0 rgba(0,0,0,.18),0 10px 26px -16px rgba(0,0,0,.5)}}
 :root[data-theme="dark"]{
   --bg:#1c1b19; --surface:#252320; --ink:#e3dccf; --muted:#a39b8d; --line:#37342f; --tint:#2c2a26;
     --hero-bg:#211f1c; --hero-ink:#e6dfd1; --hero-gold:#d2b277; --hero-muted:#b0a796; --hero-glass:rgba(255,255,255,.03); --hero-line:rgba(210,178,119,.22); --hero-field:rgba(255,255,255,.06); --hero-on:#1c1b19;
-  --madder:#cf8f7b; --gold:#cbab6c; --indigo:#a7aacb; --on-acc:#1c1b19; --danger:#d99a92; --ok:#8fbf9f; --wa:#2f7a52; --sadu-f:brightness(.62) saturate(.7); color-scheme:dark;
+  --madder:#cf8f7b; --gold:#cbab6c; --indigo:#a7aacb; --on-acc:#1c1b19; --danger:#d99a92; --ok:#8fbf9f; --wa:#2f7a52; --sadu-f:brightness(.62) saturate(.7); --hero-pat:none; color-scheme:dark;
   --sh:0 1px 0 rgba(0,0,0,.18),0 10px 26px -16px rgba(0,0,0,.5)}
 html{direction:rtl}
 *{box-sizing:border-box}
@@ -239,7 +239,7 @@ mark{background:color-mix(in srgb,var(--gold) 30%,transparent);color:inherit;bor
 @media (max-width:560px){.tb-brand{font-size:1.15rem;padding:0}.topbar .pill.txt{display:none}.topbar .wrap{gap:6px}.topbar .pill{padding:6px 10px}.topbar .pill.sq{width:34px;height:34px;flex:none}}
 
 /* masthead */
-.hero{margin-inline:-16px;padding:0 16px 20px;color:var(--hero-ink);background-color:var(--hero-bg);background-image:radial-gradient(ellipse at 50% 0%,rgba(232,198,122,.09),transparent 60%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cg fill='none' stroke='%23e8c67a' stroke-opacity='.07' stroke-width='1.4'%3E%3Cpath d='M48 14l10 24 24 10-24 10-10 24-10-24-24-10 24-10z'/%3E%3Crect x='30' y='30' width='36' height='36' transform='rotate(45 48 48)'/%3E%3Ccircle cx='0' cy='0' r='10'/%3E%3Ccircle cx='96' cy='0' r='10'/%3E%3Ccircle cx='0' cy='96' r='10'/%3E%3Ccircle cx='96' cy='96' r='10'/%3E%3C/g%3E%3C/svg%3E")}
+.hero{margin-inline:-16px;padding:0 16px 20px;color:var(--hero-ink);background-color:var(--hero-bg);background-image:radial-gradient(ellipse at 50% 0%,rgba(232,198,122,.09),transparent 60%),var(--hero-pat)}
 .hero.slim{padding-bottom:18px}
 .hero .sadu{margin-inline:-16px}
 .hero-in{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:24px;align-items:center;padding-top:18px}
