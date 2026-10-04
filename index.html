@@ -70,7 +70,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .votd q{display:block;quotes:none;font-family:var(--f-say);font-size:clamp(1.6rem,5vw,2.4rem);line-height:1.75;margin:12px auto 8px;max-width:30ch;text-wrap:balance;font-weight:700}
 .votd .by{font-family:var(--f-display);color:var(--madder);font-size:1.25rem}
 .votd .acts{display:flex;justify-content:center;gap:8px;margin-top:14px;flex-wrap:wrap}
-.star8{position:absolute;width:120px;height:120px;opacity:.09;color:var(--gold)}
+.star8{pointer-events:none;position:absolute;width:120px;height:120px;opacity:.09;color:var(--gold)}
 .star8.a{top:-30px;inset-inline-start:-30px}.star8.b{bottom:-36px;inset-inline-end:-30px}
 
 .note-bar{margin-block:12px;padding:10px 14px;border-radius:10px;background:var(--tint);color:var(--muted);font-size:.92rem;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
@@ -544,7 +544,7 @@ var ICO={
  heartF:'<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.5-9.3C1.2 8.3 3.3 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.7 0 5.8 3.8 4.5 7.2C19.5 16.4 12 21 12 21Z"/></svg>',
  edit:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/></svg>',
  star:'<svg viewBox="0 0 100 100" fill="currentColor"><path d="M50 0l14.6 14.6H85.4v20.8L100 50 85.4 64.6v20.8H64.6L50 100 35.4 85.4H14.6V64.6L0 50l14.6-14.6V14.6h20.8z"/></svg>',
- dice:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>'
+ dice:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 3.5V8h4.5"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20.5V16h-4.5"/></svg>'
 };
 
 function themeMode(){return document.documentElement.dataset.theme||'auto'}
@@ -593,7 +593,7 @@ var NAVI={
  spark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l2.2 5.3L19.5 10.5l-5.3 2.2L12 18l-2.2-5.3L4.5 10.5l5.3-2.2z"/><path d="M18.5 16.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z" fill="currentColor" stroke="none"/></svg>',
  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11 12 4l9 7v9H5v-9"/></svg>',
  topics:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h10M4 18h6"/></svg>',
- dice:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg>',
+ dice:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 3.5V8h4.5"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20.5V16h-4.5"/></svg>',
  heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7.5-4.6-9.5-9.3C1.2 8.3 3.3 4.5 7 4.5c2.1 0 3.6 1.2 5 3 1.4-1.8 2.9-3 5-3 3.7 0 5.8 3.8 4.5 7.2C19.5 16.4 12 21 12 21Z"/></svg>'
 };
 function topbar(){
