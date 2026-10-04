@@ -658,7 +658,7 @@ function votdHtml(){
 }
 function bbar(){
   var b=function(act,v,ic,l){return '<button data-act="'+act+'" aria-pressed="'+(S.view===v)+'"'+(S.view===v?' aria-current="page"':'')+'>'+ic+l+'</button>'};
-  var hl='<button class="hl" data-act="goflash" aria-pressed="'+(S.view==='flash')+'"'+(S.view==='flash'?' aria-current="page"':'')+'><span>'+NAVI.spark+'</span>شذرة</button>';
+  var hl='<button class="hl" data-act="goflash" aria-pressed="'+(S.view==='flash')+'"'+(S.view==='flash'?' aria-current="page"':'')+'><span>'+FSHIN+'</span>شذرة</button>';
   return '<nav class="bbar" aria-label="التنقل">'+b('top','home',NAVI.home,'الرئيسية')+b('gotopics','topics',NAVI.grid,'المواضيع')+hl
    +b('goquiz','quiz',NAVI.quiz,'تحدٍّ')+b('gofav','fav',NAVI.heart,'مفضلتي')
    +(S.canEdit?'<button class="plus" data-act="add" aria-label="إضافة حكمة">'+NAVI.plus+'إضافة</button>':'')+'</nav>';
@@ -758,6 +758,7 @@ function adminView(){
 var VIEWS={flash:1,quiz:1,fav:1,topics:1};
 function pageHead(t,sub){return '<header class="phead"><h1>'+t+'</h1>'+(sub?'<p>'+sub+'</p>':'')+'</header>'}
 function nextFlash(){var pool=real().filter(function(x){return !S.fk||x.kind===S.fk});if(!pool.length)pool=real();if(!pool.length)return;var n,i=0;do{n=pool[Math.floor(Math.random()*pool.length)].id;i++}while(n===S.flash&&pool.length>1&&i<9);S.flash=n}
+var FSHIN='<svg viewBox="0 0 24 24" fill="currentColor"><text x="12" y="14.4" text-anchor="middle" dominant-baseline="central" font-family="Aref Ruqaa,Amiri,serif" font-weight="700" font-size="21">س</text><g transform="translate(9.3 6.4)"><circle r="1.55"/><path d="M-1.52 .16C-1.63 2.17-.31 3.57 1.47 3.95.31 2.95.16 1.86.93 1.24Z"/></g><g transform="translate(14.7 6.4)"><circle r="1.55"/><path d="M-1.52 .16C-1.63 2.17-.31 3.57 1.47 3.95.31 2.95.16 1.86.93 1.24Z"/></g><g transform="translate(12 1.6)"><circle r="1.55"/><path d="M-1.52 .16C-1.63 2.17-.31 3.57 1.47 3.95.31 2.95.16 1.86.93 1.24Z"/></g></svg>';
 var FSPARK='<svg viewBox="0 0 24 24"><path d="M12 2.5c.8 4.6 2.9 7.2 9.5 9.5-6.6 2.3-8.7 4.9-9.5 9.5-.8-4.6-2.9-7.2-9.5-9.5 6.6-2.3 8.7-4.9 9.5-9.5z"/></svg>';
 var FUNDO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-4"/></svg>';
 function flashView(){
@@ -767,7 +768,7 @@ function flashView(){
   var fav=v&&!!S.fav[v.id];
   return topbar()+'<div class="wrap page fpage">'+pageHead('شذرة','حكمة مختارة عشوائيًا، تتجدد مع كل ضغطة.')
    +'<div class="seg fseg" role="group" aria-label="النوع">'+kinds.map(function(k){return '<button data-act="fk" data-v="'+k[0]+'" aria-pressed="'+((S.fk||'')===k[0])+'">'+k[1]+'</button>'}).join('')+'</div>'
-   +(v?'<div class="fstack"><section class="flash swipe fcard'+(v.text.length>360?' l4':v.text.length>220?' l3':v.text.length>120?' l2':'')+(rise?' rise':'')+'" aria-live="polite"><span class="flspark" aria-hidden="true">'+FSPARK+'</span><button class="ffav" data-act="fav" data-id="'+v.id+'" aria-pressed="'+fav+'" aria-label="مفضلة">'+(fav?ICO.heartF:ICO.heart)+'</button><div class="eyebrow">'+KIND[v.kind]+(v.topic?' · '+esc(v.topic):'')+'</div><q>'+esc(v.text)+'</q>'+(v.note?'<div class="mean">'+esc(v.note)+'</div>':'')+'<div class="by">'+esc(father())+'</div></section></div>'
+   +(v?'<div class="fstack"><section class="flash swipe fcard'+(v.text.length>360?' l4':v.text.length>220?' l3':v.text.length>120?' l2':'')+(rise>0?' rise':'')+'" aria-live="polite"><span class="flspark" aria-hidden="true">'+FSPARK+'</span><button class="ffav" data-act="fav" data-id="'+v.id+'" aria-pressed="'+fav+'" aria-label="مفضلة">'+(fav?ICO.heartF:ICO.heart)+'</button><div class="eyebrow">'+KIND[v.kind]+(v.topic?' · '+esc(v.topic):'')+'</div><q>'+esc(v.text)+'</q>'+(v.note?'<div class="mean">'+esc(v.note)+'</div>':'')+'<div class="by">'+esc(father())+'</div></section></div>'
    +('ontouchstart' in window?'<p class="shint'+(LS.get('hikam-flh',0)<3?'':' off')+'">اسحب البطاقة يمينًا أو يسارًا</p>':'')
    +'<div class="flbar"><button class="btn ic" data-act="flashprev" aria-label="السابقة" title="السابقة"'+(S.fi>0?'':' disabled')+'>'+FUNDO+'</button><button class="btn primary" data-act="flashnext">شذرة أخرى</button><button class="btn ic" data-act="card" data-id="'+v.id+'" aria-label="مشاركة كصورة" title="مشاركة كصورة">'+NAVI.share+'</button></div>':'<div class="empty">لا توجد حكم بعد.</div>')
    +'</div>'+bbar();
@@ -860,14 +861,24 @@ var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches
 function flyFlash(dir,side){
   var el=$('.flash.swipe');if(!el||RM){flashGo(dir);return}
   if(dir<0&&!(S.fi>0)){el.style.transition='transform .3s cubic-bezier(.2,.8,.2,1)';el.style.transform='';return}
-  /* side: which way the card leaves (-1 left, 1 right); buttons send it left for next and right for back */
-  side=side||(dir>0?-1:1);
+  if(dir<0){flashBack();return}
+  /* side: which way the card leaves (-1 left, 1 right); remembered so «back» brings it in from the same side */
+  side=side||-1;S.fsd=S.fsd||{};S.fsd[S.fh[S.fi]]=side;
   el.classList.remove('rise');var w=window.innerWidth,out=side*(w*1.1);
   el.style.transition='transform .42s cubic-bezier(.25,.7,.35,1),opacity .42s ease-in';
   el.style.transform='translate('+out+'px,-30px) rotate('+(side*26)+'deg)';el.style.opacity='0';
   var hc=LS.get('hikam-flh',0);if(hc<3)LS.set('hikam-flh',hc+1);
   var done=false,fin=function(){if(done)return;done=true;S.fdir=dir;flashGo(dir)};
   el.addEventListener('transitionend',fin,{once:true});setTimeout(fin,470);
+}
+/* back: the previous card flies in from the side it left, tilted, and settles on top of the deck (as in Diwan) */
+function flashBack(){
+  if(!(S.fi>0))return;var id=S.fh[S.fi-1],side=(S.fsd&&S.fsd[id])||-1;
+  flashGo(-1);var el=$('.flash.swipe');if(!el)return;
+  el.style.transition='none';el.style.transform='translate('+(side*window.innerWidth*1.1)+'px,-30px) rotate('+(side*26)+'deg)';el.style.opacity='0';
+  void el.offsetWidth;
+  el.style.transition='transform .5s cubic-bezier(.2,.9,.25,1.05),opacity .3s';el.style.transform='';el.style.opacity='';
+  setTimeout(function(){el.style.transition=''},520);
 }
 (function(){var sx=0,sy=0,dx=0,el=null,lock=0,t0=0,raf=0;
  document.addEventListener('touchstart',function(e){var f=e.target.closest&&e.target.closest('.flash.swipe');if(!f||e.target.closest('button'))return;el=f;f.classList.remove('rise');sx=e.touches[0].clientX;sy=e.touches[0].clientY;dx=0;lock=0;t0=Date.now();el.style.transition='none'},{passive:true});
