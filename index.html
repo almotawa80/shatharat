@@ -336,7 +336,7 @@ h2.rel{font-family:var(--f-display);color:var(--madder);text-align:center;margin
 .fstack::after{transform:translateY(6px) scale(.96);opacity:.8}
 .fstack .flash q{animation:none}
 .fstack .flash{position:relative;z-index:1;will-change:transform}
-.flash.rise{animation:fRise .38s cubic-bezier(.2,.8,.2,1) both}
+.flash.rise{animation:fRise .38s cubic-bezier(.2,.8,.2,1) backwards}
 @keyframes fRise{from{transform:translateY(6px) scale(.96);opacity:.55}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.flash.rise{animation:none}}
 /* bottom bar (phones) */
@@ -805,14 +805,14 @@ var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches
 function flyFlash(dir,fromX){
   var el=$('.flash.swipe');if(!el||RM){flashGo(dir);return}
   if(dir<0&&!(S.fi>0)){el.style.transition='transform .3s cubic-bezier(.2,.8,.2,1)';el.style.transform='';return}
-  var w=window.innerWidth,out=(dir>0?-1:1)*(w*0.9+200);
+  el.classList.remove('rise');var w=window.innerWidth,out=(dir>0?-1:1)*(w*0.9+200);
   el.style.transition='transform .26s cubic-bezier(.4,0,.9,.5),opacity .26s ease';
   el.style.transform='translateX('+out+'px) rotate('+(dir>0?-9:9)+'deg)';el.style.opacity='0';
   var done=false,fin=function(){if(done)return;done=true;S.fdir=dir;flashGo(dir)};
   el.addEventListener('transitionend',fin,{once:true});setTimeout(fin,320);
 }
 (function(){var sx=0,sy=0,dx=0,el=null,lock=0,t0=0,raf=0;
- document.addEventListener('touchstart',function(e){var f=e.target.closest&&e.target.closest('.flash.swipe');if(!f||e.target.closest('button'))return;el=f;sx=e.touches[0].clientX;sy=e.touches[0].clientY;dx=0;lock=0;t0=Date.now();el.style.transition='none'},{passive:true});
+ document.addEventListener('touchstart',function(e){var f=e.target.closest&&e.target.closest('.flash.swipe');if(!f||e.target.closest('button'))return;el=f;f.classList.remove('rise');sx=e.touches[0].clientX;sy=e.touches[0].clientY;dx=0;lock=0;t0=Date.now();el.style.transition='none'},{passive:true});
  document.addEventListener('touchmove',function(e){if(!el)return;var x=e.touches[0].clientX-sx,y=e.touches[0].clientY-sy;
    if(!lock){if(Math.abs(x)<8&&Math.abs(y)<8)return;lock=Math.abs(x)>Math.abs(y)?1:2}
    if(lock!==1)return;dx=x;if(dx>0&&!(S.fi>0))dx=dx*0.35;
