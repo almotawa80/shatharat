@@ -361,6 +361,7 @@ h2.rel{font-family:var(--f-display);color:var(--madder);text-align:center;margin
 .flash.fcard::after{content:"";position:absolute;inset:8px;border:1px solid var(--gold);border-radius:18px;opacity:.28;pointer-events:none}
 .flash.fcard q{margin:0 auto;font-size:calc(clamp(1.35rem,4.8vw,1.95rem) * var(--rs,1))}
 .flash.fcard .eyebrow{font-size:.85rem}
+.flash.fcard.l2 q{font-size:calc(1.22rem * var(--rs,1));line-height:1.75}.flash.fcard.l3 q{font-size:calc(1.08rem * var(--rs,1));line-height:1.7}.flash.fcard.l4 q{font-size:calc(.98rem * var(--rs,1));line-height:1.65;max-width:none}
 .flash.fcard .by{color:var(--gold);font-size:1.1rem}
 .flspark{position:absolute;top:16px;left:50%;transform:translateX(-50%);color:var(--gold);line-height:0}
 .flspark svg{width:24px;height:24px;fill:currentColor}
@@ -373,6 +374,14 @@ h2.rel{font-family:var(--f-display);color:var(--madder);text-align:center;margin
 .flbar .btn.ic:disabled{opacity:.35;cursor:default}
 .flbar .btn.ic svg{width:22px;height:22px}
 .flash.rise{animation:fRise .45s cubic-bezier(.2,.8,.2,1) backwards}
+@media (max-width:760px){
+  .fpage{padding-top:10px;min-height:0}
+  .fpage .phead{display:none}
+  .fpage .fseg{margin:0 auto 10px}
+  .fpage .fstack{margin:0 auto 38px}
+  .fpage .flash.fcard{min-height:clamp(170px,calc(100dvh - 392px),380px);padding:46px 18px 22px;gap:10px}
+  .fpage .shint{margin:0 0 6px}
+}
 @keyframes fRise{from{transform:translateY(16px) scale(.94);opacity:.85}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.flash.rise{animation:none}}
 /* bottom bar (phones) */
@@ -756,9 +765,9 @@ function flashView(){
   if(!S.flash||!byId(S.flash)){nextFlash();S.fh=[S.flash];S.fi=0}var v=byId(S.flash);
   var kinds=[['','الكل']].concat(KINDS.filter(function(k){return real().some(function(x){return x.kind===k[0]})}));
   var fav=v&&!!S.fav[v.id];
-  return topbar()+'<div class="wrap page">'+pageHead('ومضة','حكمة مختارة عشوائيًا، تتجدد مع كل ضغطة.')
+  return topbar()+'<div class="wrap page fpage">'+pageHead('ومضة','حكمة مختارة عشوائيًا، تتجدد مع كل ضغطة.')
    +'<div class="seg fseg" role="group" aria-label="النوع">'+kinds.map(function(k){return '<button data-act="fk" data-v="'+k[0]+'" aria-pressed="'+((S.fk||'')===k[0])+'">'+k[1]+'</button>'}).join('')+'</div>'
-   +(v?'<div class="fstack"><section class="flash swipe fcard'+(rise?' rise':'')+'" aria-live="polite"><span class="flspark" aria-hidden="true">'+FSPARK+'</span><button class="ffav" data-act="fav" data-id="'+v.id+'" aria-pressed="'+fav+'" aria-label="مفضلة">'+(fav?ICO.heartF:ICO.heart)+'</button><div class="eyebrow">'+KIND[v.kind]+(v.topic?' · '+esc(v.topic):'')+'</div><q>'+esc(v.text)+'</q>'+(v.note?'<div class="mean">'+esc(v.note)+'</div>':'')+'<div class="by">'+esc(father())+'</div></section></div>'
+   +(v?'<div class="fstack"><section class="flash swipe fcard'+(v.text.length>360?' l4':v.text.length>220?' l3':v.text.length>120?' l2':'')+(rise?' rise':'')+'" aria-live="polite"><span class="flspark" aria-hidden="true">'+FSPARK+'</span><button class="ffav" data-act="fav" data-id="'+v.id+'" aria-pressed="'+fav+'" aria-label="مفضلة">'+(fav?ICO.heartF:ICO.heart)+'</button><div class="eyebrow">'+KIND[v.kind]+(v.topic?' · '+esc(v.topic):'')+'</div><q>'+esc(v.text)+'</q>'+(v.note?'<div class="mean">'+esc(v.note)+'</div>':'')+'<div class="by">'+esc(father())+'</div></section></div>'
    +('ontouchstart' in window?'<p class="shint'+(LS.get('hikam-flh',0)<3?'':' off')+'">اسحب البطاقة يمينًا أو يسارًا</p>':'')
    +'<div class="flbar"><button class="btn ic" data-act="flashprev" aria-label="السابقة" title="السابقة"'+(S.fi>0?'':' disabled')+'>'+FUNDO+'</button><button class="btn primary" data-act="flashnext">ومضة أخرى</button><button class="btn ic" data-act="card" data-id="'+v.id+'" aria-label="مشاركة كصورة" title="مشاركة كصورة">'+NAVI.share+'</button></div>':'<div class="empty">لا توجد حكم بعد.</div>')
    +'</div>'+bbar();
