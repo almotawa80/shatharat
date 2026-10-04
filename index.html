@@ -763,7 +763,7 @@ function openStudio(id){
     o.innerHTML='<div class="studio"><div class="shead"><h3>بطاقة '+KIND[x.kind]+'</h3><button class="pill sq" data-act="close" aria-label="إغلاق">✕</button></div>'
      +'<div class="pv"><img id="cardimg" alt=""></div>'
      +'<div class="ctl" id="sopts">'+optsHtml()+'</div>'
-     +'<div class="sbar"><button class="btn wa big" data-act="shareimg">'+ICO.wa+' أرسل في واتساب</button><button class="ibx" data-act="dl" title="حفظ الصورة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg><span>حفظ</span></button><button class="ibx" data-act="copy" data-id="'+x.id+'" title="نسخ النص">'+ICO.copy+'<span>نسخ</span></button><button class="ibx" data-act="watext" data-id="'+x.id+'" title="إرسال كنص">'+ICO.wa+'<span>نص</span></button></div></div>';
+     +'<div class="sbar"><button class="btn wa big" data-act="shareimg">'+ICO.wa+' أرسل في واتساب</button><button class="ibx" data-act="dl" title="حفظ الصورة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg><span>حفظ</span></button><button class="ibx" data-act="copy" data-id="'+x.id+'" title="نسخ النص">'+ICO.copy+'<span>نسخ</span></button></div></div>';
     document.body.appendChild(o);document.body.style.overflow='hidden';
     o.addEventListener('click',function(e){if(e.target===o)closeStudio()});
     o.addEventListener('input',function(e){if(e.target.id==='scale'){ST.scale=+e.target.value/100;saveST();redraw(true)}});
