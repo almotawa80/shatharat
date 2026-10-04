@@ -204,7 +204,7 @@ mark{background:color-mix(in srgb,var(--gold) 30%,transparent);color:inherit;bor
 .strip.grid5 .fnt b{width:100%;height:34px;font-size:1rem}
 .strip.grid6 .ink i{width:26px;height:26px;margin:2px}
 .spane .slab{margin:0 4px -4px;font-size:.7rem}
-.szb{height:54px}
+
 @media (max-width:760px){.spane{height:188px;min-height:0;gap:6px;align-content:center;overflow:hidden}}
 .pal i{display:block;width:44px;height:44px;border-radius:50%;position:relative;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
 .pal i b{position:absolute;width:14px;height:14px;border-radius:50%;bottom:2px;inset-inline-start:2px;box-shadow:0 0 0 2px var(--surface)}
@@ -217,8 +217,8 @@ mark{background:color-mix(in srgb,var(--gold) 30%,transparent);color:inherit;bor
 .ink.cust.on{border-color:var(--madder);color:var(--ink);font-weight:600}
 .ink.cust i{background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red)}
 .ink.cust input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
-.szb i{display:block;border:2px solid currentColor;border-radius:3px;margin:4px auto}
-.szb{min-width:52px;align-content:end;height:62px}
+.szb i{display:block;border:2px solid currentColor;border-radius:3px;margin:0 auto}
+.szb{min-width:52px;align-content:center;height:64px}
 .szrow{display:flex;align-items:center;gap:8px}
 .tgls{display:flex;flex-wrap:wrap;gap:6px}
 .tgl{display:inline-flex;align-items:center;gap:5px;font-size:.8rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 10px;flex:none;align-self:center;white-space:nowrap}
@@ -1371,7 +1371,7 @@ function optsHtml(){
   else if(ST.tab==='font')h='<div class="slab">نوع الخط</div><div class="strip grid5">'+CFONTS.map(function(f,i){return '<button class="fnt" data-act="font" data-i="'+i+'" aria-pressed="'+(ST.font===i)+'"><b style="font-family:\''+f[1]+'\',serif">حكمة</b><span>'+f[0]+'</span></button>'}).join('')+'</div>'
    +'<div class="slab">لون الخط</div><div class="strip inks grid6">'+INKS6.map(function(k){var on=(ST.ink||'')===k[0];return '<button class="ink" data-act="ink" data-v="'+k[0]+'" aria-pressed="'+on+'" title="'+k[1]+'"><i'+(k[0]?' style="background:'+k[0]+'"':' class="auto"')+'></i><span>'+k[1]+'</span></button>'}).join('')+'</div>';
   else h='<div class="szrow"><button class="pill sq" data-act="scale" data-d="-1" aria-label="تصغير الخط">أ−</button><input id="scale" type="range" min="60" max="140" step="5" value="'+Math.round(ST.scale*100)+'" aria-label="حجم الخط"><button class="pill sq" data-act="scale" data-d="1" aria-label="تكبير الخط">أ+</button></div>'
-   +'<div class="strip grid3">'+SIZES.map(function(s){var r=s[3]/s[2];return '<button class="szb" data-act="size" data-v="'+s[0]+'" aria-pressed="'+(ST.size===s[0])+'"><i style="width:'+Math.round(22/Math.max(r,1))+'px;height:'+Math.round(22*Math.min(r,1.78))+'px"></i><span>'+s[1]+'</span></button>'}).join('')
+   +'<div class="strip grid3">'+SIZES.map(function(s){var r=s[3]/s[2];return '<button class="szb" data-act="size" data-v="'+s[0]+'" aria-pressed="'+(ST.size===s[0])+'"><i style="width:'+Math.round(28/r/Math.max(1,1/r))+'px;height:'+Math.round(Math.min(28,28*r))+'px"></i><span>'+s[1]+'</span></button>'}).join('')
    +'</div><div class="tgls">'+(ST.x.note?'<label class="tgl"><input type="checkbox" data-act="optnote"'+(ST.note?' checked':'')+'>المعنى</label>':'')+'<label class="tgl"><input type="checkbox" data-act="optlabel"'+(ST.label?' checked':'')+'>كلمة «'+KIND[ST.x.kind]+'»</label><label class="tgl"><input type="checkbox" data-act="optsite"'+(ST.site?' checked':'')+'>اسم الموقع</label></div>';
   return '<div class="stabs" role="tablist">'+STABS.map(function(b){return '<button role="tab" data-act="stab" data-v="'+b[0]+'" aria-selected="'+(ST.tab===b[0])+'">'+b[2]+'<span>'+b[1]+'</span></button>'}).join('')+'</div><div class="spane">'+h+'</div>';
 }
