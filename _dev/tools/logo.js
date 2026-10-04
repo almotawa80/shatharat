@@ -29,3 +29,27 @@ function drawLogo(c,S,v,pad){
   saduStrip(c,cx-r*0.95,bot+r*0.06,r*1.9,r*0.16,'#9b2c1f','#1c1a22');
  }
 }
+/* quote-mark + ش concepts */
+function qdrop(c,x,y,s,flip,col){/* one curly quotation drop: round head with a tapering tail */c.save();c.translate(x,y);if(flip)c.rotate(Math.PI);c.fillStyle=col;c.beginPath();c.arc(0,0,s,0,Math.PI*2);c.fill();c.beginPath();c.moveTo(-s*0.98,s*0.1);c.bezierCurveTo(-s*1.05,s*1.4,-s*0.2,s*2.3,s*0.95,s*2.55);c.bezierCurveTo(s*0.2,s*1.9,s*0.1,s*1.2,s*0.6,s*0.8);c.closePath();c.fill();c.restore()}
+function sheen(c,cx,cy,size,col,font){c.fillStyle=col;c.font='700 '+Math.round(size)+'px "'+(font||'Aref Ruqaa')+'"';c.textAlign='center';c.textBaseline='middle';c.direction='rtl';c.fillText('ش',cx,cy)}
+function drawLogo2(c,S,v,pad){
+ var r=S*(0.5-pad),cx=S/2,cy=S/2;
+ if(v==='D'){/* «ش» */
+  var g=c.createRadialGradient(cx,cy*0.8,S*0.05,cx,cy,S*0.75);g.addColorStop(0,'#b23a26');g.addColorStop(1,'#6e1b12');c.fillStyle=g;c.fillRect(0,0,S,S);
+  c.fillStyle='#e8c67a';c.font='700 '+Math.round(r*1.15)+'px "Amiri"';c.textAlign='center';c.textBaseline='middle';c.fillText('«',cx-r*0.66,cy+r*0.02);c.fillText('»',cx+r*0.66,cy+r*0.02);
+  sheen(c,cx,cy+r*0.02,r*1.25,'#fbf3e3');
+ }
+ if(v==='E'){/* ش between two big gold curly quotes */
+  c.fillStyle='#1d1f3d';c.fillRect(0,0,S,S);
+  var q=r*0.17;qdrop(c,cx+r*0.62,cy-r*0.62,q,true,'#e8c67a');qdrop(c,cx+r*0.25,cy-r*0.62,q,true,'#e8c67a');
+  qdrop(c,cx-r*0.62,cy+r*0.62,q,false,'#e8c67a');qdrop(c,cx-r*0.25,cy+r*0.62,q,false,'#e8c67a');
+  sheen(c,cx,cy+r*0.05,r*1.2,'#fbf3e3');
+ }
+ if(v==='F'||v==='G'){/* ش whose three dots are quotation drops */
+  var dark=v==='G';
+  if(dark){var g2=c.createRadialGradient(cx,cy*0.8,S*0.05,cx,cy,S*0.75);g2.addColorStop(0,'#b23a26');g2.addColorStop(1,'#6e1b12');c.fillStyle=g2}else c.fillStyle='#f4ead6';
+  c.fillRect(0,0,S,S);
+  c.fillStyle=dark?'#fbf3e3':'#9b2c1f';c.font='700 '+Math.round(r*1.55)+'px "Aref Ruqaa"';c.textAlign='center';c.textBaseline='middle';c.fillText('س',cx,cy+r*0.22);
+  var q2=r*0.135,dc=dark?'#e8c67a':'#c08a2a';qdrop(c,cx-r*0.2,cy-r*0.4,q2,false,dc);qdrop(c,cx+r*0.2,cy-r*0.4,q2,false,dc);qdrop(c,cx,cy-r*0.8,q2,false,dc);
+ }
+}

@@ -16,7 +16,7 @@ create table if not exists public.hikam_sayings (
 
 create table if not exists public.hikam_settings (
   id      int primary key default 1 check (id = 1),
-  site    text not null default 'حكم وأمثال',
+  site    text not null default 'شذرات',
   father  text not null default 'د. عبدالعزيز فيصل المطوع',
   tagline text not null default ''
 );
