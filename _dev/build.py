@@ -1,10 +1,13 @@
 import json
 FILES=['/mnt/project-files/sayings/sayings.json','/mnt/project-files/sayings/sayings_batch2.json','/mnt/project-files/sayings/sayings_batch3.json']
 KIND_TOPICS={'طرفة':'tarfa','غزل':'ghazal'}
+import re as _re
+INTERNAL=_re.compile('المصدر|الصفحة|في الأصل|ترجيح|ولعلها|محتملة|المستخرج|الاستخراج|لعل|الأرجح|يبدو أن|قد يكون|قد تكون|قد يُفهم|قد لا تكون|نسخة أخرى|الاقتباس ينقصه|منقطع عند|قد يتصل|مدمج في أول|حُذف|حذفت|أكثر منها حكمة|أقرب للحكمة|له صيغ|صيغة أخرى|صيغ قريبة|مقتطف من$|^من$|^خلاصة$|يتقاطع|ترتيب الأقواس|ربما كانت|سقطت|ساقط')
 items=[]
 for f in FILES:
     for x in json.load(open(f))['items']:
-        y={k:x[k] for k in ('text','kind','topic','note','source') if x.get(k)}
+        y={k:x[k] for k in ('text','kind','topic','note') if x.get(k)}  # the book/file source is not shown to readers
+        if y.get('note') and INTERNAL.search(y['note']): y.pop('note')  # extraction/review remarks are not for readers
         k=KIND_TOPICS.get(x.get('topic')) or next((KIND_TOPICS[t] for t in x.get('tags',[]) if t in KIND_TOPICS),None)
         if k:
             y['kind']=k
