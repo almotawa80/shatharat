@@ -1,6 +1,9 @@
 import json,os,shutil,re
 OUT='dist'; os.makedirs(OUT+'/icons',exist_ok=True)
 URL='https://shatharaat.com/'
+# likes Worker URL (Cloudflare); empty hides the like buttons
+import os
+LIKES=os.environ.get('HIKAM_LIKES') or (open('likes/url.txt').read().strip() if os.path.exists('likes/url.txt') else '')
 frag=open('index.html').read()
 i=frag.index('<div id="app">')
 head,body=frag[:i],frag[i:]
@@ -15,7 +18,7 @@ meta=f'''<!doctype html>
 <style>:root{{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}}body{{margin:0}}img{{max-width:100%}}[hidden]{{display:none!important}}</style>
 <script src="config.js"></script>
 <script src="seed.js"></script>
-<script>window.HIKAM_STATIC=true</script>
+<script>window.HIKAM_STATIC=true;window.HIKAM_LIKES='{LIKES}'</script>
 <!-- Cloudflare Web Analytics -->
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{{"token": "519420ff1f074d8d8b0c7c8aeeff84ca"}}'></script>
 <script>if('serviceWorker' in navigator&&location.protocol==='https:')window.addEventListener('load',function(){{navigator.serviceWorker.register('sw.js').catch(function(){{}})}});</script>
