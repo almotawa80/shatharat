@@ -103,7 +103,7 @@ textarea{font-family:var(--f-say);font-size:1.25rem;line-height:1.9;resize:verti
 .tile .body{padding:16px 20px 6px;cursor:pointer}
 .tile .meta{display:flex;gap:8px;align-items:center;font-size:.8rem;color:var(--muted)}
 .kind{font-family:var(--f-kufi);font-weight:600;font-size:.8rem;padding:1px 10px;border-radius:999px;border:1px solid currentColor}
-.kind.mathal{color:var(--madder)}.kind.hikma{color:var(--gold)}.kind.tarfa{color:var(--ok)}.kind.ghazal{color:#b0466b}
+.kind.mathal{color:var(--madder)}.kind.hikma{color:var(--gold)}.kind.tarfa{color:var(--indigo)}.kind.ghazal{color:color-mix(in srgb,var(--madder) 55%,var(--gold))}
 .tile p{font-family:var(--f-say);font-size:1.45rem;line-height:1.85;margin:10px 0 4px;font-weight:700;text-wrap:pretty}
 .tile .mean{font-size:.92rem;color:var(--muted);margin:0 0 6px;font-family:var(--f-ui);font-weight:400;line-height:1.6}
 .tile .by{font-family:var(--f-display);color:var(--madder);font-size:1rem}
@@ -365,12 +365,15 @@ h2.rel{font-family:var(--f-display);color:var(--madder);text-align:center;margin
 .flash.fcard .by{color:var(--gold);font-size:1.1rem}
 .flspark{position:absolute;top:16px;left:50%;transform:translateX(-50%);color:var(--gold);line-height:0}
 .flspark svg{width:24px;height:24px;fill:currentColor}
+/* one ornament (line - eight-point star - line) for section ends, headers and empty states */
+.phead::after,h2.rel::after{content:"";display:block;width:84px;height:12px;margin:10px auto 0;background:var(--gold);opacity:.8;-webkit-mask:var(--orn) center/contain no-repeat;mask:var(--orn) center/contain no-repeat}
+:root{--orn:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 12'%3E%3Cpath d='M0 6h30M50 6h30' stroke='black' stroke-width='1'/%3E%3Crect x='35' y='1' width='10' height='10'/%3E%3Crect x='35' y='1' width='10' height='10' transform='rotate(45 40 6)'/%3E%3C/svg%3E")}
 @media (max-width:360px){.tile .acts{gap:0;padding-inline:6px}.tile .acts .ib{padding-inline:6px;font-size:.82rem}}
 .ib.like{display:inline-flex;align-items:center;gap:4px}.ib.like[aria-pressed="true"]{color:var(--madder)}.lkn{font-size:.8rem;font-variant-numeric:tabular-nums;min-width:0}
 .fcard .flk{position:absolute;top:12px;inset-inline-end:14px;z-index:2;border:0;background:none;color:var(--muted);padding:6px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;line-height:1}
 .fcard .flk svg{width:20px;height:20px}.fcard .flk[aria-pressed="true"]{color:var(--madder)}
 .facts .like{display:inline-flex;align-items:center;gap:6px}.facts .like[aria-pressed="true"]{color:var(--madder)}
-.toplk{margin:14px 0 6px}.toplk h2{font-family:var(--f-kufi);font-size:1rem;color:var(--madder);margin:0 0 8px;display:flex;align-items:center;gap:6px}.toplk h2 svg{width:16px;height:16px}
+.toplk{margin:14px 0 6px}.toplk h2{font-family:var(--f-display);font-size:1.3rem;color:var(--madder);margin:0 0 8px;display:flex;align-items:center;gap:6px}.toplk h2 svg{width:16px;height:16px}
 .tlrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .tli{display:grid;gap:6px;align-content:space-between;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);color:var(--ink);text-decoration:none;box-shadow:var(--sh)}
 .tli q{quotes:none;font-family:var(--f-say);font-weight:700;font-size:1.05rem;line-height:1.7}.tli span{color:var(--madder);font-size:.8rem;display:inline-flex;align-items:center;gap:4px}.tli span svg{width:13px;height:13px}
@@ -814,7 +817,7 @@ function flashView(){
 function favView(){
   var L=real().filter(function(x){return S.fav[x.id]});
   return topbar()+'<div class="wrap page">'+pageHead('مفضلتي',L.length?L.length+' محفوظة على هذا الجهاز':'')
-   +(L.length?'<div class="grid">'+L.map(tileHtml).join('')+'</div>':'<div class="empty fempty">'+NAVI.bm+'<p>لم تحفظ شيئًا بعد.</p><p>اضغط على القلب في أي حكمة لتجدها هنا.</p><div class="more"><button class="btn primary" data-act="top">تصفّح الحكم</button></div></div>')
+   +(L.length?'<div class="grid">'+L.map(tileHtml).join('')+'</div>':'<div class="empty fempty">'+NAVI.bm+'<p>لم تحفظ شيئًا بعد.</p><p>اضغط علامة الحفظ على أي حكمة لتجدها هنا.</p><div class="more"><button class="btn primary" data-act="top">تصفّح الحكم</button></div></div>')
    +'</div>'+bbar();
 }
 /* complete-the-saying quiz: the first part of a saying, three possible endings */
@@ -1299,7 +1302,7 @@ function drawCard(cv,x,tplId,sizeId,opt){
   var nm=father();while(c.measureText(nm).width>bw&&nameSize>20){nameSize-=2;c.font='700 '+nameSize+'px "Aref Ruqaa", serif'}
   c.fillText(nm,W/2,fy);
   var nw=c.measureText(nm).width/2+22;diamond(c,W/2+nw,fy+4,7,9);c.fill();diamond(c,W/2-nw,fy+4,7,9);c.fill();
-  if(opt.site){c.fillStyle=K.sub;c.font=siteSize+'px "IBM Plex Sans Arabic", sans-serif';c.fillText(siteName(),W/2,fy+nameSize*0.9+siteSize)}
+  if(opt.site){c.fillStyle=K.sub;c.font=siteSize+'px "IBM Plex Sans Arabic", sans-serif';c.fillText(siteName()+'  ·  shatharaat.com',W/2,fy+nameSize*0.9+siteSize)}
 }
 /* ---------- the five card designs: calm ivory pages with one quiet motif each (quote mark, Andalusian arch, star, desert, Sadu) ---------- */
 TPL=[

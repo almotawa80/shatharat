@@ -6,15 +6,17 @@ function iconOld(S,pad){var cv=document.createElement('canvas');cv.width=cv.heig
  c.strokeStyle='#e8c67a';c.lineWidth=S*0.025;star(c,S/2,S/2,r*0.95);c.stroke();c.lineWidth=S*0.01;star(c,S/2,S/2,r*0.8);c.stroke();
  c.fillStyle='#fbf3e3';c.font='700 '+Math.round(r*0.78)+'px "Aref Ruqaa"';c.textAlign='center';c.textBaseline='middle';c.direction='rtl';c.fillText('حكم',S/2,S/2+r*0.08);return cv.toDataURL()}
 function og(){var W=1200,H=630,cv=document.createElement('canvas');cv.width=W;cv.height=H;var c=cv.getContext('2d');
- var g=c.createRadialGradient(W*0.62,H*0.45,40,W*0.6,H*0.5,W*0.75);g.addColorStop(0,'#2a2342');g.addColorStop(1,'#14111f');c.fillStyle=g;c.fillRect(0,0,W,H);
- c.strokeStyle='rgba(232,198,122,.09)';c.lineWidth=2;for(var x=-60;x<W+60;x+=110)for(var y=-20;y<H+60;y+=110){star(c,x+(Math.round(y/110)%2)*55,y,30);c.stroke()}
- [[0,26],[H-26,26]].forEach(function(b){c.fillStyle='#8e2318';c.fillRect(0,b[0],W,b[1]);c.fillStyle='#e8c67a';for(var x=0;x<W;x+=26){c.beginPath();c.moveTo(x,b[0]+b[1]-4);c.lineTo(x+13,b[0]+4);c.lineTo(x+26,b[0]+b[1]-4);c.closePath();c.fill()}});
+ var g=c.createRadialGradient(W*0.6,H*0.45,40,W*0.6,H*0.5,W*0.8);g.addColorStop(0,'#fbf4e4');g.addColorStop(1,'#eadcc0');c.fillStyle=g;c.fillRect(0,0,W,H);
+ c.strokeStyle='rgba(155,44,31,.07)';c.lineWidth=2;for(var x=-60;x<W+60;x+=110)for(var y=-20;y<H+60;y+=110){star(c,x+(Math.round(y/110)%2)*55,y,30);c.stroke()}
+ [[0,26],[H-26,26]].forEach(function(b){c.fillStyle='#9b2c1f';c.fillRect(0,b[0],W,b[1]);c.fillStyle='#e8c67a';for(var x=0;x<W;x+=26){c.beginPath();c.moveTo(x,b[0]+b[1]-4);c.lineTo(x+13,b[0]+4);c.lineTo(x+26,b[0]+b[1]-4);c.closePath();c.fill()}});
  var L=document.createElement('canvas');L.width=L.height=360;drawLogo2(L.getContext('2d'),360,'G',0.06);
- c.save();c.shadowColor='rgba(0,0,0,.5)';c.shadowBlur=40;c.beginPath();c.roundRect(W-90-330,150,330,330,64);c.clip();c.drawImage(L,W-90-345,135,360,360);c.restore();
+ c.save();c.shadowColor='rgba(80,30,20,.35)';c.shadowBlur=36;c.beginPath();c.roundRect(W-90-330,150,330,330,64);c.clip();c.drawImage(L,W-90-345,135,360,360);c.restore();
  c.textAlign='right';c.textBaseline='alphabetic';c.direction='rtl';var tx=W-90-330-60;
- c.fillStyle='#e8c67a';c.font='700 130px "Aref Ruqaa"';c.fillText('شذرات',tx,265);
- c.fillStyle='#f5eddf';c.font='700 44px "Amiri"';c.fillText('من أقوال د. عبدالعزيز فيصل المطوع',tx,345);
- c.fillStyle='#c3bccf';c.font='34px "Amiri"';c.fillText('حكم وأمثال وطرائف، أكثر من 1600 شذرة',tx,415);c.fillText('بطاقات مزخرفة جاهزة للمشاركة',tx,465);
+ c.fillStyle='#9b2c1f';c.font='700 140px "Aref Ruqaa"';c.fillText('شذرات',tx,262);
+ c.strokeStyle='#a07422';c.lineWidth=2;c.beginPath();c.moveTo(tx,300);c.lineTo(tx-150,300);c.moveTo(tx-210,300);c.lineTo(tx-360,300);c.stroke();c.fillStyle='#a07422';star(c,tx-180,300,16);c.fill();
+ c.fillStyle='#2a2320';c.font='700 44px "Amiri"';c.fillText('من أقوال د. عبدالعزيز فيصل المطوع',tx,372);
+ c.fillStyle='#6b5f55';c.font='34px "Amiri"';c.fillText('أكثر من 4500 حكمة ومثل وطرفة',tx,432);c.fillText('بطاقات هادئة جاهزة للمشاركة',tx,480);
+ c.fillStyle='#a07422';c.font='600 30px "IBM Plex Sans Arabic", sans-serif';c.textAlign='left';c.direction='ltr';c.fillText('shatharaat.com',90,H-62);
  return cv.toDataURL()}
 document.fonts.load('700 50px "Aref Ruqaa"','حكم شذرات س').then(function(){return document.fonts.load('700 50px "Amiri"','حكم')}).then(function(){
  window.OUT={'icon-192':icon(192,.06),'icon-512':icon(512,.06),'icon-maskable-512':icon(512,.2),'apple-touch-icon':icon(180,.08),'favicon-64':icon(64,.01),'logo-120':icon(120,.04),'og-image':og()};});
