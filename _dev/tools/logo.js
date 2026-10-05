@@ -53,3 +53,13 @@ function drawLogo2(c,S,v,pad){
   var q2=r*0.135,dc=dark?'#e8c67a':'#c08a2a';qdrop(c,cx-r*0.2,cy-r*0.4,q2,false,dc);qdrop(c,cx+r*0.2,cy-r*0.4,q2,false,dc);qdrop(c,cx,cy-r*0.8,q2,false,dc);
  }
 }
+
+/* seal: ش (its three dots as quote drops) inside an eight-pointed star (two squares). transparent=true leaves the corners clear for in-page use */
+function sealSq(c,cx,cy,r){c.beginPath();for(var t=0;t<2;t++){var o=t*Math.PI/4;for(var i=0;i<4;i++){var a=o+Math.PI/2*i,x=cx+r*Math.cos(a),y=cy+r*Math.sin(a);i?c.lineTo(x,y):c.moveTo(x,y)}c.closePath()}}
+function drawSeal(c,cx,cy,r,shadow){
+ c.save();if(shadow){c.shadowColor='rgba(80,30,20,.25)';c.shadowBlur=r*0.12}c.fillStyle='#9b2c1f';sealSq(c,cx,cy,r);c.fill();c.restore();
+ c.strokeStyle='#e8c67a';c.lineWidth=Math.max(1,r*0.035);sealSq(c,cx,cy,r*0.9);c.stroke();c.lineWidth=Math.max(1,r*0.012);sealSq(c,cx,cy,r*0.8);c.stroke();
+ var R=r*0.62;c.fillStyle='#fbf3e3';c.font='700 '+Math.round(R*1.5)+'px "Aref Ruqaa"';c.textAlign='center';c.textBaseline='middle';c.direction='rtl';c.fillText('س',cx,cy+R*0.2);
+ var q=R*0.13;qdrop(c,cx-R*0.2,cy-R*0.4,q,false,'#e8c67a');qdrop(c,cx+R*0.2,cy-R*0.4,q,false,'#e8c67a');qdrop(c,cx,cy-R*0.78,q,false,'#e8c67a')
+}
+function drawLogoSeal(c,S,pad,bg){if(bg){c.fillStyle=bg;c.fillRect(0,0,S,S)}drawSeal(c,S/2,S/2,S*(0.5-pad),!bg)}
