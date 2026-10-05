@@ -368,6 +368,21 @@ h2.rel{font-family:var(--f-display);color:var(--madder);text-align:center;margin
 /* one ornament (line - eight-point star - line) for section ends, headers and empty states */
 .phead::after,h2.rel::after{content:"";display:block;width:84px;height:12px;margin:10px auto 0;background:var(--gold);opacity:.8;-webkit-mask:var(--orn) center/contain no-repeat;mask:var(--orn) center/contain no-repeat}
 :root{--orn:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 12'%3E%3Cpath d='M0 6h30M50 6h30' stroke='black' stroke-width='1'/%3E%3Crect x='35' y='1' width='10' height='10'/%3E%3Crect x='35' y='1' width='10' height='10' transform='rotate(45 40 6)'/%3E%3C/svg%3E")}
+#wel{position:fixed;inset:0;z-index:150;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 50% 30%,var(--tint),var(--bg) 70%);animation:welin .6s ease;transition:opacity .45s;overflow-y:auto}
+#wel.out{opacity:0;pointer-events:none}
+@keyframes welin{from{opacity:0}to{opacity:1}}
+.welbox{display:grid;justify-items:center;gap:14px;text-align:center;max-width:440px;animation:welup .8s ease}
+@keyframes welup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.welseal{width:112px;height:112px;display:block;filter:drop-shadow(0 6px 14px rgba(80,30,20,.22))}
+.weln{font:700 clamp(3rem,13vw,4.2rem)/1.2 var(--f-display);color:var(--madder);margin:2px 0 0}
+.welorn{display:flex;align-items:center;gap:10px;width:200px}.welorn span{flex:1;height:1px;background:linear-gradient(to right,transparent,var(--gold))}.welorn span:last-child{background:linear-gradient(to left,transparent,var(--gold))}
+.welorn i{width:8px;height:8px;background:var(--gold);transform:rotate(45deg);outline:1px solid var(--gold);outline-offset:3px}
+.welv{quotes:none;font-family:var(--f-say);font-size:1.6rem;line-height:1.9;font-weight:700;color:var(--ink);text-wrap:balance;margin-top:6px}
+.welp{margin:0;color:var(--madder);font-family:var(--f-display);font-size:1.15rem}
+.welc{margin:0;color:var(--muted);font-size:.9rem}
+.welgo{margin-top:8px;padding:12px 34px;font-size:1.05rem}
+@media (max-height:640px){.welseal{width:84px;height:84px}.welv{font-size:1.35rem;line-height:1.7}.welbox{gap:10px}}
+@media (prefers-reduced-motion:reduce){#wel,.welbox{animation:none}}
 @media (max-width:360px){.tile .acts{gap:0;padding-inline:6px}.tile .acts .ib{padding-inline:6px;font-size:.82rem}}
 .ib.like{display:inline-flex;align-items:center;gap:4px}.ib.like[aria-pressed="true"]{color:var(--madder)}.lkn{font-size:.8rem;font-variant-numeric:tabular-nums;min-width:0}
 .fcard .flk{position:absolute;top:12px;inset-inline-end:14px;z-index:2;border:0;background:none;color:var(--muted);padding:6px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;line-height:1}
@@ -552,7 +567,7 @@ function startLocal(){
   if(d&&Array.isArray(d.items)){S.items=d.items.map(clean);S.settings=Object.assign(S.settings,d.settings||{})}
   if(!S.items.length)S.items=SEED.length?SEED.map(clean):SAMPLES.slice();
   S.canEdit=!!LS.get('hikam-demo-admin',false);S.isOwner=S.canEdit;
-  S.ready=true;route();render();loadLikes();
+  S.ready=true;route();render();maybeWelcome();loadLikes();
 }
 /* ---------- likes: public counts kept by a Cloudflare Worker + D1 (window.HIKAM_LIKES = its URL); each device likes a saying once ---------- */
 var LIKES=String(window.HIKAM_LIKES||'').replace(/\/+$/,'');
@@ -578,13 +593,24 @@ function toggleLike(id){
    .then(function(r){if(!r.ok)throw r;return r.json()}).then(function(j){S.likes[id]=j.n;paintLikes()})
    .catch(function(){if(on)delete S.mine[id];else S.mine[id]=1;S.likes[id]=was;LS.set('hikam-liked',S.mine);paintLikes();toast('تعذّر تسجيل الإعجاب، حاول لاحقًا')});
 }
+/* ---------- welcome screen: shown once per device on the home page ---------- */
+function welcomeHtml(){
+  var L=real().filter(function(x){return (x.kind==='hikma'||x.kind==='mathal')&&x.text.length<95}),v=L.length?L[Math.floor(Math.random()*L.length)]:null;
+  return '<div id="wel" role="dialog" aria-modal="true" aria-label="مرحبًا"><div class="welbox">'+LOGO.replace('class="logo"','class="welseal"')+'<h1 class="weln">'+esc(siteName())+'</h1><div class="welorn"><span></span><i></i><span></span></div>'
+   +(v?'<q class="welv">'+esc(v.text)+'</q><p class="welp">— '+esc(father())+' —</p>':'')
+   +'<p class="welc">'+real().length+' حكمة ومثل وطرفة</p><button class="btn primary welgo" data-act="welcomeclose">ادخل شذرات</button></div></div>';
+}
+function maybeWelcome(){
+  if(!S.ready||S.canEdit||S.view!=='home'||$('#wel')||LS.get('hikam-welcome',0)||!real().length)return;
+  var d=document.createElement('div');d.innerHTML=welcomeHtml();document.body.appendChild(d.firstChild);
+}
 function boot(){
   var c=window.HIKAM_CONFIG||{};
   if(!c.SUPABASE_URL||!c.SUPABASE_ANON_KEY||!window.supabase){startLocal();return}
   try{sb=window.supabase.createClient(c.SUPABASE_URL,c.SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,storageKey:'hikam-auth'}})}catch(e){startLocal();return}
   S.mode='supa';
   sb.auth.getSession().then(function(r){return loadRole(r.data&&r.data.session)}).then(fetchAll)
-   .then(function(){S.ready=true;route();render();loadLikes()})
+   .then(function(){S.ready=true;route();render();maybeWelcome();loadLikes()})
    .catch(function(){var c=LS.get('hikam-cache',null);if(c&&c.items&&c.items.length){S.items=c.items.map(clean);S.settings=c.settings||S.settings;S.offline=true}else{S.items=SAMPLES.slice();S.err='تعذر الاتصال بقاعدة البيانات، تُعرض أمثلة مؤقتًا.'}S.ready=true;route();render()});
   sb.auth.onAuthStateChange(function(ev,session){if(ev==='SIGNED_IN'||ev==='SIGNED_OUT')loadRole(session).then(function(){if(S.ready)render()})});
 }
@@ -1555,6 +1581,7 @@ document.addEventListener('click',function(e){
    case 'wacard':if(x){fontsReady();sendCard(x,quickCard(x))}break;
    case 'top':if(S.view!=='home'){nav('home')}else{S.onlyFav=false;S.rnd=null;render.keep=true;render();window.scrollTo({top:0,behavior:'smooth'})}break;
    case 'install':doInstall();break;
+   case 'welcomeclose':var w=$('#wel');LS.set('hikam-welcome',1);if(w){w.classList.add('out');setTimeout(function(){w.remove()},450)}break;
    case 'instno':LS.set('hikam-inst',{t:Date.now()});var ib=$('#inst');if(ib)ib.remove();break;
    case 'insthelp':toggleMenu(null,false);instHelp();break;
    case 'totopics':openTopics();break;
@@ -1601,7 +1628,7 @@ function isApp(){return (window.matchMedia&&matchMedia('(display-mode: standalon
 window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();instEvt=e;setTimeout(instBanner,4000)});
 window.addEventListener('appinstalled',function(){instEvt=null;LS.set('hikam-inst',{done:1});var b=$('#inst');if(b)b.remove();toast('تم تثبيت التطبيق')});
 function instBanner(){
-  if(isApp()||$('#inst')||$('#ov'))return;
+  if(isApp()||$('#inst')||$('#ov')||$('#wel'))return;
   var st=LS.get('hikam-inst',{});if(st.done||(st.t&&Date.now()-st.t<7*864e5))return;
   if(!instEvt&&!isIOS&&!/android/i.test(UA))return;
   var d=document.createElement('div');d.id='inst';d.setAttribute('role','dialog');d.setAttribute('aria-label','ثبّت التطبيق');
