@@ -520,16 +520,40 @@ function hl(text,q){
 function clean(x){return {id:x.id,kind:KIND[x.kind]?x.kind:'hikma',text:String(x.text||'').trim(),topic:String(x.topic||'').trim(),note:String(x.note||'').trim(),source:String(x.source||'').trim(),star:!!x.star,created:+x.created||Date.now()}}
 function saveLocal(){LS.set(KEY,{items:real(),settings:S.settings})}
 function chk(r){if(r&&r.error)throw r.error;return r}
+/* admin edits kept by the Cloudflare Worker (window.HIKAM_LIKES): only the changes are stored, the built-in sayings stay in the site */
+function apiOn(){return !!LIKES&&S.mode==='local'}
+function adm(path,body){
+  return fetch(LIKES+'/admin/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({key:LS.get('hikam-key','')},body||{}))})
+   .then(function(r){if(r.status===401){LS.set('hikam-key','');S.canEdit=S.isOwner=false;render();toast('انتهت صلاحية الدخول، سجّل الدخول من جديد');throw r}if(r.status===429){toast('محاولات كثيرة، انتظر قليلًا');throw r}if(!r.ok)throw r;return r.json()});
+}
+function applyRemote(j){
+  var edits=(j&&j.edits)||[],by={};
+  S.items.forEach(function(x,i){by[x.id]=i});
+  var del={};
+  edits.forEach(function(e){
+    if(e.op==='del'){del[e.id]=1;return}
+    if(e.op==='set'&&e.data){var c=clean(e.data);if(by[c.id]!==undefined)S.items[by[c.id]]=c;else{by[c.id]=S.items.length;S.items.push(c)}}
+  });
+  if(Object.keys(del).length)S.items=S.items.filter(function(x){return !del[x.id]});
+  var st=(j&&j.settings)||{};['site','father','tagline'].forEach(function(k){if(st[k]!==undefined&&st[k]!=='')S.settings[k]=st[k]});
+}
+function loadRemote(){
+  if(!apiOn()||!window.fetch)return;
+  fetch(LIKES+'/content').then(function(r){return r.json()}).then(function(j){applyRemote(j);render.keep=true;render()}).catch(function(){});
+}
 function putMany(list){
   list=list.map(clean);
+  if(apiOn())return adm('save',{items:list}).then(function(){S.items=S.items.filter(function(x){return !x.sample&&!list.some(function(y){return y.id===x.id})}).concat(list)});
   if(S.mode==='supa')return sb.from('hikam_sayings').upsert(list).then(chk).then(fetchAll);
   S.items=S.items.filter(function(x){return !x.sample&&!list.some(function(y){return y.id===x.id})}).concat(list);saveLocal();return Promise.resolve();
 }
 function removeOne(id){
+  if(apiOn())return adm('delete',{id:id}).then(function(){S.items=S.items.filter(function(x){return x.id!==id})});
   if(S.mode==='supa')return sb.from('hikam_sayings').delete().eq('id',id).then(chk).then(fetchAll);
   S.items=S.items.filter(function(x){return x.id!==id});saveLocal();return Promise.resolve();
 }
 function saveSettings(){
+  if(apiOn())return adm('settings',{settings:{site:S.settings.site||'',father:S.settings.father||'',tagline:S.settings.tagline||''}});
   if(S.mode==='supa')return sb.from('hikam_settings').upsert({id:1,site:S.settings.site||'',father:S.settings.father||'',tagline:S.settings.tagline||''}).then(chk);
   saveLocal();return Promise.resolve();
 }
@@ -548,10 +572,11 @@ function loadRole(session){
 }
 function startLocal(){
   S.mode='local';var d=LS.get(KEY,null);
-  if(d&&Array.isArray(d.items)){S.items=d.items.map(clean);S.settings=Object.assign(S.settings,d.settings||{})}
+  if(!LIKES&&d&&Array.isArray(d.items)){S.items=d.items.map(clean);S.settings=Object.assign(S.settings,d.settings||{})}
   if(!S.items.length)S.items=SEED.length?SEED.map(clean):SAMPLES.slice();
-  S.canEdit=!!LS.get('hikam-demo-admin',false);S.isOwner=S.canEdit;
-  S.ready=true;route();render();maybeWelcome();loadLikes();
+  S.canEdit=LIKES?!!LS.get('hikam-key',''):!!LS.get('hikam-demo-admin',false);S.isOwner=S.canEdit;
+  S.ready=true;route();render();maybeWelcome();loadLikes();loadRemote();
+  if(LIKES&&S.canEdit)adm('login').catch(function(){})
 }
 /* ---------- likes: public counts kept by a Cloudflare Worker + D1 (window.HIKAM_LIKES = its URL); each device likes a saying once ---------- */
 var LIKES=String(window.HIKAM_LIKES||'').replace(/\/+$/,'');
@@ -747,6 +772,7 @@ function homeView(){return topbar()+mast()+'<div class="wrap">'+sampleNote()+top
 
 function loginView(){
   var demo=S.mode!=='supa',cfg=window.HIKAM_CONFIG||{};
+  if(apiOn())return topbar()+mast(true)+'<div class="wrap"><section class="panel" style="max-width:460px;margin-inline:auto"><h2>دخول الإدارة</h2><p class="hint">للمشرف فقط. القراءة والمشاركة متاحة للجميع بلا حساب.</p><form class="form" id="cflogin"><label>كلمة المرور<input id="l-key" type="password" autocomplete="current-password"></label><div class="row"><button class="btn primary" id="l-btn" type="submit">دخول</button><button class="btn ghost" type="button" data-act="home">رجوع</button></div></form></section></div>';
   if(demo&&cfg.DEMO_LOGIN===false)return topbar()+mast(true)+'<div class="wrap"><section class="panel" style="max-width:460px;margin-inline:auto"><h2>دخول الإضافة</h2><p class="hint">لوحة الإضافة لم تُفعَّل بعد على هذا الموقع.</p><div class="row"><button class="btn ghost" data-act="home">رجوع</button></div></section></div>';
   return topbar()+mast(true)+'<div class="wrap"><section class="panel" style="max-width:460px;margin-inline:auto"><h2>دخول الإضافة</h2>'
    +(demo?'<p class="hint">هذه نسخة المعاينة ولم تُربط بقاعدة بيانات بعد، فالدخول هنا تجريبي وما تضيفه يُحفظ في هذا المتصفح فقط.</p><div class="row"><button class="btn primary" data-act="demologin">دخول تجريبي</button><button class="btn ghost" data-act="home">رجوع</button></div>'
@@ -799,7 +825,7 @@ function adminView(){
   if(!S.canEdit)return loginView();
   var T=[['add',S.edit?'تعديل':'إضافة حكمة'],['import','رفع دفعة'],['manage','إدارة'],['settings','الإعدادات']];
   var body={add:addForm,import:importTab,manage:manageTab,settings:settingsTab}[S.adm]();
-  return topbar()+mast(true)+'<div class="wrap"><section class="panel"><h2>لوحة الإضافة</h2><p class="hint">'+(S.mode==='supa'?'متصل باسم '+esc(S.email):'وضع المعاينة: ما تضيفه يُحفظ في هذا المتصفح فقط.')+'</p>'
+  return topbar()+mast(true)+'<div class="wrap"><section class="panel"><h2>لوحة الإضافة</h2><p class="hint">'+(S.mode==='supa'?'متصل باسم '+esc(S.email):apiOn()?'تعديلاتك تُحفظ وتظهر لجميع الزوار.':'وضع المعاينة: ما تضيفه يُحفظ في هذا المتصفح فقط.')+'</p>'
    +'<div class="tabs" role="tablist">'+T.map(function(t){return '<button class="tab" role="tab" data-act="adm" data-v="'+t[0]+'" aria-selected="'+(S.adm===t[0])+'">'+t[1]+'</button>'}).join('')+'</div><div id="admbody">'+body+'</div></section>'
    +'<div class="more" style="margin-top:16px"><button class="btn ghost" data-act="home">عرض الموقع</button></div></div>';
 }
@@ -1492,6 +1518,7 @@ function bindInputs(){
   var q=$('#q');if(q){q.addEventListener('input',function(){S.q=q.value;S.shown=24;renderList();var c=$('#count');if(c)c.textContent=visible().length+' نتيجة'});q.addEventListener('keydown',function(e){if(e.key==='Enter'){q.blur();render.keep=false;render();var fl=$('#filters');if(fl)fl.scrollIntoView({behavior:'smooth',block:'start'})}});q.addEventListener('search',function(){if(!q.value){S.q='';render.keep=true;render()}})}
   var so=$('#sort');if(so)so.addEventListener('change',function(){S.sort=so.value;S.seed=Math.random();renderList()});
   var lf=$('#loginf');if(lf)lf.addEventListener('submit',function(e){e.preventDefault();doLogin()});
+  var cf=$('#cflogin');if(cf)cf.addEventListener('submit',function(e){e.preventDefault();doCfLogin()});
   var af=$('#addf');if(af)af.addEventListener('submit',function(e){e.preventDefault();saveOne()});
   var sf=$('#setf');if(sf)sf.addEventListener('submit',function(e){e.preventDefault();S.settings={father:$('#s-father').value.trim(),site:$('#s-site').value.trim(),tagline:$('#s-tag').value.trim()};saveSettings().then(function(){toast('حُفظت الإعدادات');render()},function(){toast('تعذر الحفظ، حاول مرة أخرى')})});
   var fd=$('#f-doc');if(fd)fd.addEventListener('change',function(){if(fd.files[0])readDoc(fd.files[0]);fd.value=''});
@@ -1500,6 +1527,12 @@ function bindInputs(){
   var dr=$('#drop');if(dr){['dragenter','dragover'].forEach(function(t){dr.addEventListener(t,function(e){e.preventDefault();dr.classList.add('over')})});['dragleave','drop'].forEach(function(t){dr.addEventListener(t,function(){dr.classList.remove('over')})});
     dr.addEventListener('drop',function(e){e.preventDefault();var fs=[].slice.call(e.dataTransfer.files||[]);var imgs=fs.filter(function(f){return /^image\//.test(f.type)});var docs=fs.filter(function(f){return /\.(docx|txt)$/i.test(f.name)});if(imgs.length)ocr(imgs);docs.forEach(readDoc);if(!imgs.length&&!docs.length)toast('الملفات المدعومة: وورد ‎.docx أو نص ‎.txt أو صورة')})}
   [].forEach.call(document.querySelectorAll('[data-imp]'),function(el){el.addEventListener(el.type==='checkbox'||el.tagName==='SELECT'?'change':'input',function(){var r=S.imp[+el.dataset.i],k=el.dataset.imp;if(k==='on'){r.on=el.checked;render.keep=true;render()}else r[k]=el.value})});
+}
+function doCfLogin(){
+  var k=$('#l-key').value||'';if(!k){toast('اكتب كلمة المرور');return}
+  var b=$('#l-btn');b.disabled=true;LS.set('hikam-key',k);
+  adm('login').then(function(){S.canEdit=S.isOwner=true;S.adm='add';go('admin');toast('أهلًا بك')})
+   .catch(function(r){b.disabled=false;LS.set('hikam-key','');if(!r||r.status===401)toast('كلمة المرور غير صحيحة');else if(r.status!==429)toast('تعذر الدخول، تحقق من الاتصال')});
 }
 function doLogin(){
   var email=($('#l-email').value||'').trim(),pw=$('#l-pass').value||'';
@@ -1536,7 +1569,7 @@ document.addEventListener('click',function(e){
    case 'home':S.edit=null;history.replaceState(null,'',location.pathname+location.search);go('home');break;
    case 'login':go('login');break;
    case 'demologin':S.canEdit=S.isOwner=true;LS.set('hikam-demo-admin',true);S.adm='add';go('admin');toast('دخلت في وضع المعاينة');break;
-   case 'logout':if(S.mode==='supa'){sb.auth.signOut().finally(function(){S.canEdit=S.isOwner=false;S.email='';go('home');toast('تم الخروج')})}else{S.canEdit=S.isOwner=false;LS.set('hikam-demo-admin',false);go('home');toast('تم الخروج')}break;
+   case 'logout':if(S.mode==='supa'){sb.auth.signOut().finally(function(){S.canEdit=S.isOwner=false;S.email='';go('home');toast('تم الخروج')})}else{S.canEdit=S.isOwner=false;LS.set('hikam-demo-admin',false);LS.set('hikam-key','');go('home');toast('تم الخروج')}break;
    case 'goflash':if(S.view==='flash'){flyFlash(1)}else nav('flash');break;
    case 'flashnext':flyFlash(1);break;
    case 'flashprev':flyFlash(-1);break;

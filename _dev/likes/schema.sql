@@ -7,3 +7,9 @@ CREATE TABLE IF NOT EXISTS likes (
 );
 CREATE INDEX IF NOT EXISTS likes_ts ON likes (ts);
 CREATE INDEX IF NOT EXISTS likes_dev ON likes (dev, ts);
+
+-- admin tables (edits made from the site's admin panel)
+CREATE TABLE IF NOT EXISTS edits (id TEXT PRIMARY KEY, op TEXT NOT NULL, data TEXT, ts INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS settings (k TEXT PRIMARY KEY, v TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS attempts (ip TEXT NOT NULL, ts INTEGER NOT NULL);
+CREATE INDEX IF NOT EXISTS attempts_ip ON attempts (ip, ts);
