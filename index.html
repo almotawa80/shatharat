@@ -429,8 +429,8 @@ h2.rel{font-family:var(--f-display);color:var(--madder);text-align:center;margin
 .mi:hover,.mi:focus-visible{background:var(--tint)}
 .mi.in{color:var(--madder);font-weight:600}.mi.in svg{color:var(--madder)}
 .mi.out{color:var(--danger)}.mi.out svg{color:var(--danger)}
-/* side rail on wider screens */
-@media (min-width:761px){
+/* side rail on wider screens (not on landscape phones, which keep the bottom bar) */
+@media (min-width:761px) and (min-height:501px){
   body:has(.bbar){padding-inline-start:104px}
   body:has(.bbar) .topbar,body:has(.bbar) .hero{margin-inline-start:-104px;padding-inline-start:120px}
   body:has(.bbar) .hero .sadu{margin-inline-start:-120px}
@@ -444,7 +444,7 @@ h2.rel{font-family:var(--f-display);color:var(--madder);text-align:center;margin
   body:has(.bbar) .fab{display:none}
 }
 
-@media (max-width:760px){
+@media (max-width:760px),(max-height:500px){
   body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   .bbar{display:flex;position:fixed;inset-inline:0;bottom:0;z-index:9;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px))}
   .bbar button{flex:1;border:0;background:none;display:grid;justify-items:center;gap:2px;font-size:.72rem;color:var(--muted);padding:4px 0;cursor:pointer}
