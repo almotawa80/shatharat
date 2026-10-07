@@ -1509,14 +1509,16 @@ function quickCard(x){
   var cv=document.createElement('canvas');drawCard(cv,x,suitTpl(x),ST.size,cardOpts());return cv.toDataURL('image/png');
 }
 function igShare(){
-  /* Instagram has no web share link: draw the story-size card and hand it to the phone's share sheet (Instagram is in it); otherwise save it to add by hand */
+  /* the web cannot hand an image to Instagram: save the story-size card, then open Instagram's story camera directly (the saved card is the first picture in its gallery) */
   var cv=document.createElement('canvas');drawCard(cv,ST.x,ST.tpl,'story',cardOpts());
-  var blob=urlBlob(cv.toDataURL('image/png')),name=fname(ST.x),file=null;
-  try{file=new File([blob],name,{type:'image/png'})}catch(e){}
-  if(file&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file]}).catch(function(e){if(e&&e.name!=='AbortError')toast('تعذر فتح المشاركة')});return}
-  saveFile(blob,name,function(ok){if(ok)toast('حُفظت بحجم الحالة، افتح إنستقرام وأضفها إلى قصتك')});
+  var blob=urlBlob(cv.toDataURL('image/png'));
+  saveFile(blob,fname(ST.x),function(ok){
+    if(!ok)return;
+    toast('حُفظت البطاقة، اختَرها من معرض الصور في القصة');
+    if(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent))setTimeout(function(){location.href='instagram://story-camera'},900);
+  });
 }
-function shareImg(){sendCard(ST.x,ST.url)}
+function shareImg(){var u=sayUrl(ST.x);openLink("https://wa.me/?text="+encodeURIComponent("«"+ST.x.text+"»\n— "+father()+(/^https?:/.test(u)?"\n\n"+u:"")))}
 function openLink(href){var a=document.createElement('a');a.href=href;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()}
 function pageUrl(x){var u=location.href.split('#')[0];return /^https?:/.test(u)&&!/claude\.ai|claudeusercontent/.test(u)?u+'#'+x.id:''}
 function shareText(x){var u=pageUrl(x);return '«'+x.text+'»\n— '+father()+(u?'\n\n'+u:'')}
