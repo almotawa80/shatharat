@@ -210,9 +210,11 @@ mark{background:color-mix(in srgb,var(--gold) 30%,transparent);color:inherit;bor
 .tgl{display:inline-flex;align-items:center;gap:5px;font-size:.8rem;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 10px;flex:none;align-self:center;white-space:nowrap}
 .tgl input{margin:0;accent-color:var(--madder)}
 .sbar{grid-area:bar;display:flex;gap:6px;align-items:stretch;padding-top:8px;border-top:1px solid var(--line)}
-.sbar .btn{flex:1}
 .ibx{border:1px solid var(--line);background:var(--surface);border-radius:10px;display:grid;justify-items:center;gap:1px;padding:5px 9px;font-size:.72rem;color:var(--muted);cursor:pointer}
-.ibx svg{width:19px;height:19px}
+.ibx svg{width:22px;height:22px}
+.sbar .ibx{flex:1 1 0;min-width:0;padding:8px 4px;font-size:.78rem;font-weight:600;border-radius:12px}
+.ibx.wa{background:var(--wa);border-color:var(--wa);color:#fff}
+.ibx.ig{background:radial-gradient(circle at 30% 107%,#fdf497 0,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285AEB 90%);border-color:transparent;color:#fff}
 .sbar .btn{min-width:0;white-space:nowrap}
 @media (max-width:360px){.ibx{padding:5px 6px;font-size:.68rem}.sbar{gap:4px}.sbar .btn.big{font-size:.92rem;padding-inline:8px}}
 @media (max-width:760px){
@@ -1462,7 +1464,7 @@ function openStudio(id){
     o.innerHTML='<div class="studio"><div class="shead"><h3>بطاقة '+KIND[x.kind]+'</h3><button class="pill sq" data-act="close" aria-label="إغلاق">✕</button></div>'
      +'<div class="pv"><img id="cardimg" alt=""></div>'
      +'<div class="ctl" id="sopts">'+optsHtml()+'</div>'
-     +'<div class="sbar"><button class="btn wa big" data-act="shareimg">'+ICO.wa+' أرسل في واتساب</button><button class="ibx" data-act="igshare" title="مشاركة في إنستقرام (حجم الحالة)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".9" fill="currentColor" stroke="none"/></svg><span>إنستقرام</span></button><button class="ibx" data-act="dl" title="حفظ الصورة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg><span>حفظ</span></button><button class="ibx" data-act="copy" data-id="'+x.id+'" title="نسخ النص">'+ICO.copy+'<span>نسخ</span></button></div></div>';
+     +'<div class="sbar"><button class="ibx wa" data-act="shareimg" title="إرسال في واتساب">'+ICO.wa+'<span>واتساب</span></button><button class="ibx ig" data-act="igshare" title="مشاركة في إنستقرام (حجم الحالة)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".9" fill="currentColor" stroke="none"/></svg><span>إنستقرام</span></button><button class="ibx" data-act="dl" title="حفظ الصورة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg><span>حفظ</span></button><button class="ibx" data-act="copy" data-id="'+x.id+'" title="نسخ النص">'+ICO.copy+'<span>نسخ</span></button></div></div>';
     document.body.appendChild(o);document.body.style.overflow='hidden';
     o.addEventListener('click',function(e){if(e.target===o)closeStudio()});
     o.addEventListener('input',function(e){if(e.target.id==='scale'){ST.scale=+e.target.value/100;saveST();redraw(true)}if(e.target.id==='inkpick'){ST.ink=e.target.value;saveST();$$('.inks .ink').forEach(function(b){b.setAttribute('aria-pressed','false')});e.target.closest('.cust').classList.add('on');redraw(true)}});
