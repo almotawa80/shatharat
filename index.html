@@ -1476,7 +1476,7 @@ function openStudio(id){
     o.innerHTML='<div class="studio"><div class="shead"><h3>بطاقة '+KIND[x.kind]+'</h3><button class="pill sq" data-act="close" aria-label="إغلاق">✕</button></div>'
      +'<div class="pv"><img id="cardimg" alt=""></div>'
      +'<div class="ctl" id="sopts">'+optsHtml()+'</div>'
-     +'<div class="sbar"><button class="btn wa big" data-act="shareimg">'+ICO.wa+' أرسل في واتساب</button><button class="ibx" data-act="dl" title="حفظ الصورة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg><span>حفظ</span></button><button class="ibx" data-act="copy" data-id="'+x.id+'" title="نسخ النص">'+ICO.copy+'<span>نسخ</span></button></div></div>';
+     +'<div class="sbar"><button class="btn wa big" data-act="shareimg">'+ICO.wa+' أرسل في واتساب</button><button class="ibx" data-act="igshare" title="مشاركة في إنستقرام (حجم الحالة)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".9" fill="currentColor" stroke="none"/></svg><span>إنستقرام</span></button><button class="ibx" data-act="dl" title="حفظ الصورة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14"/></svg><span>حفظ</span></button><button class="ibx" data-act="copy" data-id="'+x.id+'" title="نسخ النص">'+ICO.copy+'<span>نسخ</span></button></div></div>';
     document.body.appendChild(o);document.body.style.overflow='hidden';
     o.addEventListener('click',function(e){if(e.target===o)closeStudio()});
     o.addEventListener('input',function(e){if(e.target.id==='scale'){ST.scale=+e.target.value/100;saveST();redraw(true)}if(e.target.id==='inkpick'){ST.ink=e.target.value;saveST();$$('.inks .ink').forEach(function(b){b.setAttribute('aria-pressed','false')});e.target.closest('.cust').classList.add('on');redraw(true)}});
@@ -1519,6 +1519,14 @@ function sendCard(x,url){
 function quickCard(x){
   /* draws with the visitor's last choices and the design that suits this saying */
   var cv=document.createElement('canvas');drawCard(cv,x,suitTpl(x),ST.size,cardOpts());return cv.toDataURL('image/png');
+}
+function igShare(){
+  /* Instagram has no web share link: draw the story-size card and hand it to the phone's share sheet (Instagram is in it); otherwise save it to add by hand */
+  var cv=document.createElement('canvas');drawCard(cv,ST.x,ST.tpl,'story',cardOpts());
+  var blob=urlBlob(cv.toDataURL('image/png')),name=fname(ST.x),file=null;
+  try{file=new File([blob],name,{type:'image/png'})}catch(e){}
+  if(file&&navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file]}).catch(function(e){if(e&&e.name!=='AbortError')toast('تعذر فتح المشاركة')});return}
+  saveFile(blob,name,function(ok){if(ok)toast('حُفظت بحجم الحالة، افتح إنستقرام وأضفها إلى قصتك')});
 }
 function shareImg(){sendCard(ST.x,ST.url)}
 function openLink(href){var a=document.createElement('a');a.href=href;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove()}
@@ -1637,6 +1645,7 @@ document.addEventListener('click',function(e){
    case 'tpl':ST.tpl=el.dataset.v;ST.auto=false;redraw();break;
    case 'stab':ST.tab=el.dataset.v;var so3=$('#sopts');if(so3){so3.innerHTML=optsHtml();thumbs()}break;
    case 'size':ST.size=el.dataset.v;saveST();redraw();break;
+   case 'igshare':igShare();break;
    case 'dl':dl();break;
    case 'shareimg':shareImg();break;
    case 'pastebox':S.paste=!S.paste;render.keep=true;render();if(S.paste)setTimeout(function(){var p=$('#p-text');if(p)p.focus()},20);break;
