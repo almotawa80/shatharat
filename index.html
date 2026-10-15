@@ -531,9 +531,9 @@ var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){r
 var LS={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 var KEY='hikam-data-v3';
 var SEED=(window.HIKAM_SEED||[]).map(function(x,i){return {id:x.id||'m'+(i+1),kind:x.kind,text:x.text,topic:x.topic||'',note:x.note||'',source:x.source||'',created:x.created||(1759500000000-i*60000)}});
-var KIND={hikma:'حكمة',mathal:'مثل',tarfa:'طرفة',ghazal:'غزل'};
-var KINDS=[['hikma','حِكم','حكمة'],['mathal','أمثال','مثلًا'],['tarfa','طرائف','طرفة'],['ghazal','غزل','غزل']];
-var KLAB={hikma:'حِكمة',mathal:'مَثَل',tarfa:'طُرفة',ghazal:'غَزَل'};
+var KIND={hikma:'حكمة',mathal:'مثل',tarfa:'طرفة',ghazal:'لطيفة'};
+var KINDS=[['hikma','حِكم','حكمة'],['mathal','أمثال','مثلًا'],['tarfa','طرائف','طرفة'],['ghazal','لطائف','لطيفة']];
+var KLAB={hikma:'حِكمة',mathal:'مَثَل',tarfa:'طُرفة',ghazal:'لَطيفة'};
 function kindOpts(sel){return KINDS.map(function(k){return '<option value="'+k[0]+'"'+(sel===k[0]?' selected':'')+'>'+KIND[k[0]]+'</option>'}).join('')}
 var TOPICS=['الأخلاق والآداب','العلاقات والناس','الإيمان والعبادة','العقل والحكمة','السياسة والقيادة','المال والاقتصاد','الكلام والصمت','الصحة والنفس','الحياة والزمن','العلم والثقافة','التربية والأسرة','الصبر والشدائد','النجاح والإبداع','الحياة الزوجية'];
 var PLACEHOLDER_NAME='د. عبدالعزيز فيصل المطوع';
@@ -786,7 +786,7 @@ function mast(slim){
 function votdHtml(){
   var v=S.rnd?byId(S.rnd):ofDay();if(!v)return '';
   return '<section class="votd" aria-label="حكمة اليوم"><span class="star8 a" aria-hidden="true">'+ICO.star+'</span><span class="star8 b" aria-hidden="true">'+ICO.star+'</span>'
-   +'<div class="eyebrow">'+(S.rnd?KIND[v.kind]+' مختارة':KIND[v.kind]+' اليوم').replace('مثل مختارة','مثل مختار').replace('غزل مختارة','من الغزل')+'</div><q>'+esc(v.text)+'</q><div class="by">'+esc(father())+'</div>'
+   +'<div class="eyebrow">'+(S.rnd?KIND[v.kind]+' مختارة':KIND[v.kind]+' اليوم').replace('مثل مختارة','مثل مختار').replace('لطيفة مختارة','لطيفة مختارة')+'</div><q>'+esc(v.text)+'</q><div class="by">'+esc(father())+'</div>'
    +'<div class="acts"><button class="btn wa" data-act="wacard" data-id="'+v.id+'">'+ICO.wa+' <span class="lg">أرسل في </span>واتساب</button><button class="btn primary" data-act="card" data-id="'+v.id+'">'+ICO.card+' <span class="lg">صمّم </span>البطاقة</button><button class="btn ghost" data-act="rand" aria-label="حكمة أخرى" title="حكمة أخرى">'+ICO.dice+'<span class="tx"> أخرى</span></button></div></section>';
 }
 function bbar(){
@@ -1073,7 +1073,7 @@ function parseBulk(text,defKind,defTopic){
     var head=l.match(/^(?:#+\s*)?(?:(?:الموضوع|قسم|باب)\s*[:：]\s*)?([^:：]{2,24})\s*[:：]$/);
     if(head&&head[1].trim().split(/\s+/).length<=3){topic=head[1].trim();return}
     var kind=defKind||'hikma',m;
-    if((m=l.match(/^(حكمة|حكمه|مثل|مثل شعبي|طرفة|طرفه|نكتة|غزل)\s*[:：\-–]\s*/))){kind=/مثل/.test(m[1])?'mathal':/طرف|نكت/.test(m[1])?'tarfa':/غزل/.test(m[1])?'ghazal':'hikma';l=l.slice(m[0].length)}
+    if((m=l.match(/^(حكمة|حكمه|مثل|مثل شعبي|طرفة|طرفه|نكتة|غزل|لطيفة|لطائف)\s*[:：\-–]\s*/))){kind=/مثل/.test(m[1])?'mathal':/طرف|نكت/.test(m[1])?'tarfa':/غزل|لطي|لطائ/.test(m[1])?'ghazal':'hikma';l=l.slice(m[0].length)}
     var note='';var parts=l.split(/\s+[|]\s+|\s*[|]\s*/);if(parts.length>1){l=parts[0];note=parts.slice(1).join(' ').trim()}
     l=l.replace(/^[«"“'(]+|[»"”')]+$/g,'').trim();
     var nl=norm(l);if(nl.replace(/\s/g,'').length<5||nl.split(' ').length<2)return;
