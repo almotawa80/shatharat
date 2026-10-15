@@ -1,6 +1,6 @@
 import json
 FILES=['/mnt/project-files/sayings/sayings.json','/mnt/project-files/sayings/sayings_batch2.json','/mnt/project-files/sayings/sayings_batch3.json']
-KIND_TOPICS={'طرفة':'tarfa','غزل':'ghazal'}
+KIND_TOPICS={'طرفة':'tarfa','غزل':'tarfa'}  # the old ghazal kind was merged into طرائف
 import re as _re
 INTERNAL=_re.compile('المصدر|الصفحة|في الأصل|ترجيح|ولعلها|محتملة|المستخرج|الاستخراج|لعل|الأرجح|يبدو أن|قد يكون|قد تكون|قد يُفهم|قد لا تكون|نسخة أخرى|الاقتباس ينقصه|منقطع عند|قد يتصل|مدمج في أول|حُذف|حذفت|أكثر منها حكمة|أقرب للحكمة|له صيغ|صيغة أخرى|صيغ قريبة|مقتطف من$|^من$|^خلاصة$|يتقاطع|ترتيب الأقواس|ربما كانت|سقطت|ساقط')
 items=[]
@@ -12,6 +12,7 @@ for f in FILES:
         if k:
             y['kind']=k
             if y.get('topic') in KIND_TOPICS: y.pop('topic')
+        if y.get('kind')=='ghazal': y['kind']='tarfa'
         items.append(y)
 # keep each saying's id stable across rebuilds (shared links and favourites use it): reuse the id the same text had before, new texts get the next free number
 import os,re

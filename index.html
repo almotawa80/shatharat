@@ -532,7 +532,7 @@ var LS={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:JS
 var KEY='hikam-data-v3';
 var SEED=(window.HIKAM_SEED||[]).map(function(x,i){return {id:x.id||'m'+(i+1),kind:x.kind,text:x.text,topic:x.topic||'',note:x.note||'',source:x.source||'',created:x.created||(1759500000000-i*60000)}});
 var KIND={hikma:'حكمة',mathal:'مثل',tarfa:'طرفة',ghazal:'لطيفة'};
-var KINDS=[['hikma','حِكم','حكمة'],['mathal','أمثال','مثلًا'],['tarfa','طرائف','طرفة'],['ghazal','لطائف','لطيفة']];
+var KINDS=[['hikma','حِكم','حكمة'],['mathal','أمثال','مثلًا'],['tarfa','طرائف','طرفة']];
 var KLAB={hikma:'حِكمة',mathal:'مَثَل',tarfa:'طُرفة',ghazal:'لَطيفة'};
 function kindOpts(sel){return KINDS.map(function(k){return '<option value="'+k[0]+'"'+(sel===k[0]?' selected':'')+'>'+KIND[k[0]]+'</option>'}).join('')}
 var TOPICS=['الأخلاق والآداب','العلاقات والناس','الإيمان والعبادة','العقل والحكمة','السياسة والقيادة','المال والاقتصاد','الكلام والصمت','الصحة والنفس','الحياة والزمن','العلم والثقافة','التربية والأسرة','الصبر والشدائد','النجاح والإبداع','الحياة الزوجية'];
@@ -574,7 +574,7 @@ function hl(text,q){
 }
 
 /* ---------- storage: Supabase when configured, else this browser ---------- */
-function clean(x){return {id:x.id,kind:KIND[x.kind]?x.kind:'hikma',text:String(x.text||'').trim(),topic:String(x.topic||'').trim(),note:String(x.note||'').trim(),source:String(x.source||'').trim(),star:!!x.star,created:+x.created||Date.now()}}
+function clean(x){return {id:x.id,kind:x.kind==='ghazal'?'tarfa':KIND[x.kind]?x.kind:'hikma',text:String(x.text||'').trim(),topic:String(x.topic||'').trim(),note:String(x.note||'').trim(),source:String(x.source||'').trim(),star:!!x.star,created:+x.created||Date.now()}}
 function saveLocal(){LS.set(KEY,{items:real(),settings:S.settings})}
 function chk(r){if(r&&r.error)throw r.error;return r}
 /* admin edits kept by the Cloudflare Worker (window.HIKAM_LIKES): only the changes are stored, the built-in sayings stay in the site */
@@ -1073,7 +1073,7 @@ function parseBulk(text,defKind,defTopic){
     var head=l.match(/^(?:#+\s*)?(?:(?:الموضوع|قسم|باب)\s*[:：]\s*)?([^:：]{2,24})\s*[:：]$/);
     if(head&&head[1].trim().split(/\s+/).length<=3){topic=head[1].trim();return}
     var kind=defKind||'hikma',m;
-    if((m=l.match(/^(حكمة|حكمه|مثل|مثل شعبي|طرفة|طرفه|نكتة|غزل|لطيفة|لطائف)\s*[:：\-–]\s*/))){kind=/مثل/.test(m[1])?'mathal':/طرف|نكت/.test(m[1])?'tarfa':/غزل|لطي|لطائ/.test(m[1])?'ghazal':'hikma';l=l.slice(m[0].length)}
+    if((m=l.match(/^(حكمة|حكمه|مثل|مثل شعبي|طرفة|طرفه|نكتة|غزل|لطيفة|لطائف)\s*[:：\-–]\s*/))){kind=/مثل/.test(m[1])?'mathal':/طرف|نكت/.test(m[1])?'tarfa':/غزل|لطي|لطائ/.test(m[1])?'tarfa':'hikma';l=l.slice(m[0].length)}
     var note='';var parts=l.split(/\s+[|]\s+|\s*[|]\s*/);if(parts.length>1){l=parts[0];note=parts.slice(1).join(' ').trim()}
     l=l.replace(/^[«"“'(]+|[»"”')]+$/g,'').trim();
     var nl=norm(l);if(nl.replace(/\s/g,'').length<5||nl.split(' ').length<2)return;
