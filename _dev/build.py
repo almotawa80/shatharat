@@ -1,5 +1,5 @@
 import json
-FILES=['/mnt/project-files/sayings/sayings.json','/mnt/project-files/sayings/sayings_batch2.json','/mnt/project-files/sayings/sayings_batch3.json']
+FILES=['/mnt/project-files/sayings/sayings.json','/mnt/project-files/sayings/sayings_batch2.json','/mnt/project-files/sayings/sayings_batch3.json','/mnt/project-files/sayings/sayings_batch4.json']
 KIND_TOPICS={'طرفة':'tarfa','غزل':'tarfa'}  # the old ghazal kind was merged into طرائف
 import re as _re
 INTERNAL=_re.compile('المصدر|الصفحة|في الأصل|ترجيح|ولعلها|محتملة|المستخرج|الاستخراج|لعل|الأرجح|يبدو أن|قد يكون|قد تكون|قد يُفهم|قد لا تكون|نسخة أخرى|الاقتباس ينقصه|منقطع عند|قد يتصل|مدمج في أول|حُذف|حذفت|أكثر منها حكمة|أقرب للحكمة|له صيغ|صيغة أخرى|صيغ قريبة|مقتطف من$|^من$|^خلاصة$|يتقاطع|ترتيب الأقواس|ربما كانت|سقطت|ساقط')
