@@ -4,6 +4,8 @@ URL='https://shatharaat.com/'
 # likes Worker URL (Cloudflare); empty hides the like buttons
 import os
 LIKES=os.environ.get('HIKAM_LIKES') or (open('likes/url.txt').read().strip() if os.path.exists('likes/url.txt') else '')
+import hashlib
+SEEDV=hashlib.sha1(open('seed.js','rb').read()).hexdigest()[:10]  # new sayings change the URL, so no cache keeps the old list
 frag=open('index.html').read()
 i=frag.index('<div id="app">')
 head,body=frag[:i],frag[i:]
@@ -17,7 +19,7 @@ meta=f'''<!doctype html>
 <link rel="canonical" href="{URL}"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#9b2c1f" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#1c1b19" media="(prefers-color-scheme: dark)"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="شذرات"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png">
 <style>:root{{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}}body{{margin:0}}img{{max-width:100%}}[hidden]{{display:none!important}}</style>
 <script src="config.js"></script>
-<script src="seed.js"></script>
+<script src="seed.js?v={SEEDV}"></script>
 <script>window.HIKAM_STATIC=true;window.HIKAM_LIKES='{LIKES}'</script>
 <!-- Cloudflare Web Analytics -->
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{{"token": "519420ff1f074d8d8b0c7c8aeeff84ca"}}'></script>
@@ -36,12 +38,12 @@ window.HIKAM_CONFIG = {
 ''')
 open(OUT+'/.nojekyll','w').write('')
 open(OUT+'/sw.js','w').write('''// Network first, cache as fallback, so the app opens offline with the last version seen.
-const C='hikam-v1';
+const C='hikam-v2';
 self.addEventListener('install',e=>self.skipWaiting());
 self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));
 self.addEventListener('fetch',e=>{
   const r=e.request;if(r.method!=='GET'||new URL(r.url).origin!==location.origin)return;
-  e.respondWith(fetch(r).then(res=>{if(res.ok){const cp=res.clone();caches.open(C).then(c=>c.put(r,cp))}return res}).catch(()=>caches.match(r).then(m=>m||caches.match('./'))));
+  e.respondWith(fetch(r,{cache:'no-cache'}).then(res=>{if(res.ok){const cp=res.clone();caches.open(C).then(c=>c.put(r,cp))}return res}).catch(()=>caches.match(r).then(m=>m||caches.match('./'))));
 });
 ''')
 json.dump({"name":"شذرات","short_name":"شذرات","lang":"ar","dir":"rtl","start_url":"./","scope":"./","display":"standalone","background_color":"#f4efe7","theme_color":"#9b2c1f",
