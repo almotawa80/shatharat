@@ -546,6 +546,8 @@ footer .sadu{height:14px;background-size:28px 14px;margin-inline:0;border-radius
 .about .abox p{margin:0 0 6px;color:var(--ink)}
 .ause{list-style:none;padding:0;margin:0 0 18px;display:grid;gap:10px}.ause li{display:grid;grid-template-columns:72px 1fr;gap:10px;align-items:baseline;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px}.ause b{color:var(--madder);font-family:var(--f-display);font-size:1.15rem}
 ::view-transition-old(root),::view-transition-new(root){animation-duration:.22s}
+.about .author{text-align:center;margin:0 0 16px}.about .author img{width:132px;height:132px;border-radius:50%;object-fit:cover;object-position:50% 35%;border:3px solid var(--surface);box-shadow:0 0 0 2px var(--gold),var(--sh);display:block;margin:4px auto 10px}
+.about .author h2{font-family:var(--f-display);color:var(--madder);font-size:1.6rem;margin:0 0 6px}.about .author p{max-width:56ch;margin:0 auto 8px;line-height:1.95;text-align:start}
 </style>
 
 <main id="app"><div class="sadu" aria-hidden="true"></div><p class="empty">جارٍ التحميل…</p></main>
@@ -1023,11 +1025,13 @@ function topicsView(){
       return '<button class="tcard h-'+hues[i%4]+'" data-act="pick" data-v="'+esc(t[0])+'"><span class="tic">'+ticon(t[0])+'</span><b>'+esc(t[0])+'</b><small>'+nf(t[1])+' شذرة</small>'+(ex?'<q>'+esc(ex.text.length>70?ex.text.slice(0,68).replace(/\s+\S*$/,'')+'…':ex.text)+'</q>':'')+'</button>'}).join('')+'</div>'
    +'</div>'+bbar();
 }
+var ABOUT_BIO='';  /* نبذة عن المؤلف: فقرات يفصل بينها سطر فارغ */
 function aboutView(){
   var cnt={};real().forEach(function(x){cnt[x.kind]=(cnt[x.kind]||0)+1});
   var parts=KINDS.filter(function(k){return cnt[k[0]]}).map(function(k){return nf(cnt[k[0]])+' '+(k[0]==='hikma'?'حكمة':k[0]==='mathal'?'مثلًا':'طرفة')});
   var li=function(t,s){return '<li><b>'+t+'</b><span>'+s+'</span></li>'};
   return topbar()+'<div class="wrap page about">'+pageHead('عن شذرات','')
+   +'<section class="author"><img src="img/father.jpg" width="132" height="132" alt="'+esc(father())+'" loading="lazy" decoding="async"><h2>'+esc(father())+'</h2>'+(ABOUT_BIO?ABOUT_BIO.split('\n\n').map(function(t){return '<p>'+esc(t)+'</p>'}).join(''):'')+'</section>'
    +'<section class="abox"><p class="alead">«'+esc(siteName())+'» مجموعة من أقوال <em>'+esc(father())+'</em>: '+parts.join('، و')+'، في '+nf(topicsAll().length)+' موضوعًا.</p>'
    +'<p>جُمعت من كتابه «شذرات المطوع» ومن مسوّداته اللاحقة، ورُوجعت نصوصها لتُقرأ على الشاشة وتُرسل لمن تحب.</p></section>'
    +'<h2 class="rel">كيف تستفيد منها</h2><ul class="ause">'

@@ -60,6 +60,7 @@ if os.path.exists('tools/shell.js'):
     except Exception as e: print('shell skipped',e)
 # self-hosted fonts (OFL), cached by the service worker for offline use
 if os.path.isdir('fonts'): shutil.copytree('fonts',OUT+'/fonts',dirs_exist_ok=True)
+if os.path.isdir('img'): shutil.copytree('img',OUT+'/img',dirs_exist_ok=True)
 shutil.copy('seed.js',OUT+'/seed.js')
 if not os.path.exists(OUT+'/config.js'):
     open(OUT+'/config.js','w').write('''// بعد تجهيز Supabase ضع الرابط والمفتاح العام (anon) هنا. لا تضع مفتاح service_role أبدًا.
