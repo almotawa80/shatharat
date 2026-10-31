@@ -2,11 +2,18 @@ import json
 FILES=['/mnt/project-files/sayings/sayings.json','/mnt/project-files/sayings/sayings_batch2.json','/mnt/project-files/sayings/sayings_batch3.json','/mnt/project-files/sayings/sayings_batch4.json']
 KIND_TOPICS={'طرفة':'tarfa','غزل':'tarfa'}  # the old ghazal kind was merged into طرائف
 import re as _re
+def tidy(t):
+    # Arabic punctuation hugs the word before it and is followed by one space; brackets hug their contents
+    t=_re.sub(r'\s+([،؛:.!؟»)])',r'\1',t)
+    t=_re.sub(r'([(«])\s+',r'\1',t)
+    t=_re.sub(r'([،؛:!؟])(?=[^\s،؛:.!؟»)”’"\'\d\n\u064b-\u0652])',r'\1 ',t)
+    return _re.sub(r'[ \t]{2,}',' ',t).strip()
 INTERNAL=_re.compile('المصدر|الصفحة|في الأصل|ترجيح|ولعلها|محتملة|المستخرج|الاستخراج|لعل|الأرجح|يبدو أن|قد يكون|قد تكون|قد يُفهم|قد لا تكون|نسخة أخرى|الاقتباس ينقصه|منقطع عند|قد يتصل|مدمج في أول|حُذف|حذفت|أكثر منها حكمة|أقرب للحكمة|له صيغ|صيغة أخرى|صيغ قريبة|مقتطف من$|^من$|^خلاصة$|يتقاطع|ترتيب الأقواس|ربما كانت|سقطت|ساقط')
 items=[]
 for f in FILES:
     for x in json.load(open(f))['items']:
-        y={k:x[k] for k in ('text','kind','topic','note') if x.get(k)}  # the book/file source is not shown to readers
+        y={k:x[k] for k in ('text','kind','topic','note') if x.get(k)}
+        y['text']=tidy(y['text'])  # the book/file source is not shown to readers
         if y.get('note') and INTERNAL.search(y['note']): y.pop('note')  # extraction/review remarks are not for readers
         k=KIND_TOPICS.get(x.get('topic')) or next((KIND_TOPICS[t] for t in x.get('tags',[]) if t in KIND_TOPICS),None)
         if k:
@@ -19,7 +26,7 @@ import os,re
 old={}
 if os.path.exists('seed.js'):
     prev=json.loads(open('seed.js').read().split('=',1)[1].strip().rstrip(';'))
-    for i,x in enumerate(prev): old.setdefault(x['text'],x.get('id') or f'm{i+1}')
+    for i,x in enumerate(prev): old.setdefault(tidy(x['text']),x.get('id') or f'm{i+1}')
 nxt=max([int(v[1:]) for v in old.values() if re.fullmatch(r'm\d+',v)]+[0])+1
 for y in items:
     if y['text'] in old: y['id']=old.pop(y['text'])
