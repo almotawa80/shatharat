@@ -41,11 +41,18 @@ def fnv(t):
     return h
 _seed=json.loads(open('seed.js').read().split('=',1)[1].strip().rstrip(';'))
 pool=sorted([x for x in _seed if x['kind'] in ('hikma','mathal') and len(x['text'])<=200],key=lambda x:x['id'])
+# Khalid's reviewed list of daily picks, one per day in order, a year without repeats
+PICKS=None;PF='/mnt/project-files/sayings/daily_picks.json'
+if os.path.exists(PF):
+    _p=json.load(open(PF));_by={x['id']:x for x in _seed};_ids=[i for i in _p['ids'] if i in _by and i not in set(_p.get('dropped',[]))]
+    if _ids and _p.get('status')=='approved': PICKS={'start':(datetime.date.fromisoformat(_p.get('start','2026-11-01'))-datetime.date(1970,1,1)).days,'ids':_ids}
 VOTD={}
 for d in range(-1,60):
-    t=datetime.date.today()+datetime.timedelta(days=d);k=f'{t.year}-{t.month-1}-{t.day}';x=pool[fnv(k)%len(pool)]
+    t=datetime.date.today()+datetime.timedelta(days=d);k=f'{t.year}-{t.month-1}-{t.day}'
+    if PICKS: x=_by[PICKS['ids'][((t-datetime.date(1970,1,1)).days-PICKS['start'])%len(PICKS['ids'])]]
+    else: x=pool[fnv(k)%len(pool)]
     VOTD[k]=[x['id'],x['kind'],x['text']]
-html=open(OUT+'/index.html').read().replace('<script src="config.js" defer></script>','<script>window.HIKAM_VOTD='+json.dumps(VOTD,ensure_ascii=False,separators=(',',':'))+'</script>\n<script src="config.js" defer></script>',1)
+html=open(OUT+'/index.html').read().replace('<script src="config.js" defer></script>','<script>window.HIKAM_VOTD='+json.dumps(VOTD,ensure_ascii=False,separators=(',',':'))+(';window.HIKAM_PICKS='+json.dumps(PICKS,separators=(',',':')) if PICKS else '')+'</script>\n<script src="config.js" defer></script>',1)
 open(OUT+'/index.html','w').write(html)
 import subprocess
 if os.path.exists('tools/shell.js'):
@@ -87,13 +94,22 @@ print(len(rows))
 # one small static page per saying, so a shared link previews the saying itself
 import html as _h
 os.makedirs(OUT+'/s',exist_ok=True)
+# per-saying preview images (tools/og.js) where they exist, the site image otherwise
+OGD=next((d for d in ('og','../og') if os.path.exists(d+'/index.json')),None)  # _dev builds read the deployed og/ at the repo root
+OGIDX=json.load(open(OGD+'/index.json')) if OGD else {}
+if OGIDX:
+    os.makedirs(OUT+'/og',exist_ok=True)
+    for k in OGIDX:
+        if os.path.exists(f'{OGD}/{k}.jpg') and os.path.abspath(OGD)!=os.path.abspath(OUT+'/og'): shutil.copy(f'{OGD}/{k}.jpg',OUT+f'/og/{k}.jpg')
+    shutil.copy(OGD+'/index.json',OUT+'/og/index.json')
+OGI=lambda i:f'{URL}og/{i}.jpg?v={OGIDX[i][:6]}' if i in OGIDX and os.path.exists(f'{OGD}/{i}.jpg') else f'{URL}icons/og-image.png?v=3'
 seed=json.loads(open('seed.js').read().split('=',1)[1].strip().rstrip(';'))
 for n,x in enumerate(seed):
     t=x['text'].strip();short=t if len(t)<=110 else t[:108].rsplit(' ',1)[0]+'…'
     T=_h.escape(short,quote=True);full=_h.escape(t);i=x.get('id') or f'm{n+1}'
     open(OUT+f'/s/{i}.html','w').write(f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{T} | شذرات</title><meta name="description" content="من أقوال د. عبدالعزيز فيصل المطوع · شذرات">
-<meta property="og:type" content="article"><meta property="og:site_name" content="شذرات"><meta property="og:title" content="{T}"><meta property="og:description" content="من أقوال د. عبدالعزيز فيصل المطوع · شذرات"><meta property="og:url" content="{URL}s/{i}.html"><meta property="og:image" content="{URL}icons/og-image.png?v=3"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
+<meta property="og:type" content="article"><meta property="og:site_name" content="شذرات"><meta property="og:title" content="{T}"><meta property="og:description" content="من أقوال د. عبدالعزيز فيصل المطوع · شذرات"><meta property="og:url" content="{URL}s/{i}.html"><meta property="og:image" content="{OGI(i)}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="{URL}s/{i}.html"><link rel="icon" href="../icons/favicon-64.png"><meta http-equiv="refresh" content="0;url=../#s/{i}"><script>location.replace('../#s/{i}')</script></head>
 <body style="font-family:serif;text-align:center;padding:40px"><p style="font-size:1.4rem">{full}</p><p><a href="../#s/{i}">افتح في شذرات</a></p></body></html>
 ''')
