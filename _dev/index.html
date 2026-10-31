@@ -537,7 +537,7 @@ footer .sadu{height:14px;background-size:28px 14px;margin-inline:0;border-radius
 .shrow:hover{background:color-mix(in srgb,var(--madder) 9%,var(--tint))}.shrow b{display:block;font-weight:600}.shrow small{display:block;color:var(--muted);font-size:.84rem}
 .shic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--surface);color:var(--madder);flex:none}
 .mdig b{font-weight:700}
-.qbar{height:6px;border-radius:99px;background:var(--tint);overflow:hidden;margin:-4px 0 14px}.qbar i{display:block;height:100%;background:var(--madder);transition:width .3s}
+.qbar{height:6px;border-radius:99px;background:var(--tint);overflow:hidden;margin:-4px auto 14px;max-width:720px}.qbar i{display:block;height:100%;background:var(--madder);transition:width .3s}
 .qsum{text-align:center}.qbig{display:flex;justify-content:center;align-items:baseline;gap:10px;margin:6px 0}.qbig b{font-family:var(--f-display);font-size:4rem;color:var(--madder);line-height:1.1}.qbig span{color:var(--muted);font-size:1.2rem}.qbest{color:var(--muted)}
 .sadu.mini{height:10px;width:132px;margin:12px auto 0;margin-inline:auto;background-size:20px 10px;border-radius:3px;opacity:.9}
 .fpage .phead .sadu.mini{display:none}
@@ -673,6 +673,7 @@ S.likes={};S.top=[];S.mine=LS.get('hikam-liked',{});
 function devId(){var d=LS.get('hikam-dev','');if(!/^[a-z0-9]{16,40}$/.test(d)){d='';for(var i=0;i<24;i++)d+='abcdefghijklmnopqrstuvwxyz0123456789'.charAt(Math.floor(Math.random()*36));LS.set('hikam-dev',d)}return d}
 var NFA=null;try{NFA=new Intl.NumberFormat('ar-u-nu-arab',{useGrouping:false})}catch(e){}
 function nf(n){return S.dig!=='latn'&&NFA?NFA.format(n):String(n)}
+function cnt(n,one,two,few,many){return n===1?one:n===2?two:n>=3&&n<=10?nf(n)+' '+few:nf(n)+' '+many}
 function nfmt(n){return n?(n>=1000?nf(Math.round(n/100)/10)+'k':nf(n)):''}
 function likeBtn(id,cls){if(!LIKES)return '';var on=!!S.mine[id];return '<button class="'+cls+' like" data-act="like" data-id="'+id+'" aria-pressed="'+on+'" aria-label="إعجاب" title="إعجاب">'+(on?ICO.heartF:ICO.heart)+'<span class="lkn">'+nfmt(S.likes[id]||0)+'</span></button>'}
 function paintLikes(){[].forEach.call(document.querySelectorAll('[data-act="like"]'),function(b){var id=b.dataset.id,on=!!S.mine[id];b.setAttribute('aria-pressed',on);b.innerHTML=(on?ICO.heartF:ICO.heart)+'<span class="lkn">'+nfmt(S.likes[id]||0)+'</span>'})}
@@ -885,7 +886,6 @@ function addForm(){
    +'<div class="two">'
    +'<label>الموضوع<input id="a-topic" type="text" list="topics" placeholder="مثلًا: الصبر" value="'+esc(e?e.topic:(LS.get('hikam-lasttopic','')))+'"></label></div>'
    +'<label>المعنى أو المناسبة (اختياري)<input id="a-note" type="text" placeholder="سطر يشرح المثل أو قصته" value="'+esc(e?e.note:'')+'"></label>'
-   +'<label class="opt"><input type="checkbox" id="a-star"'+(e&&e.star?' checked':'')+'> مختارة (تظهر في «حكمة اليوم»)</label>'
    +'<div class="row"><button class="btn primary big" type="submit">'+(e?'حفظ التعديل':'إضافة إلى الموقع')+'</button>'+(e?'<button class="btn ghost" type="button" data-act="canceledit">إلغاء</button><span class="grow"></span><button class="btn danger" type="button" data-act="del" data-id="'+e.id+'">حذف</button>':'')+'</div></form>'+topicOpts();
 }
 function importTab(){
@@ -1109,12 +1109,12 @@ function flashBack(){
    else{f.style.transition='transform .35s cubic-bezier(.2,.9,.3,1.2),opacity .35s ease';f.style.transform='';f.style.opacity=''}},{passive:true});
 })();
 function nav(v,h){
-  S.view=v;S.edit=null;try{history.pushState({v:v},'',v==='home'?location.pathname+location.search:'#'+(h||v))}catch(e){}
+  S.view=v;S.edit=null;S.hn=(S.hn||0)+1;try{history.pushState({v:v},'',v==='home'?location.pathname+location.search:'#'+(h||v))}catch(e){}
   var go=function(){render();window.scrollTo(0,0)};
   if(document.startViewTransition&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){try{document.startViewTransition(go);return}catch(e){}}
   go();
 }
-window.addEventListener('popstate',function(){var h=location.hash.slice(1);if(/^s\//.test(h)){S.view='say';S.sid=h.slice(2);render();window.scrollTo(0,0)}else if(VIEWS[h]){S.view=h;render();window.scrollTo(0,0)}else if(!h&&S.view!=='home'&&S.view!=='admin'){S.view='home';render()}});
+window.addEventListener('popstate',function(){S.hn=Math.max(0,(S.hn||0)-1);var h=location.hash.slice(1);if(/^s\//.test(h)){S.view='say';S.sid=h.slice(2);render();window.scrollTo(0,0)}else if(VIEWS[h]){S.view=h;render();window.scrollTo(0,0)}else if(!h&&S.view!=='home'&&S.view!=='admin'){S.view='home';render()}});
 function render(){
   if(!S.ready)return;
   var y=window.scrollY;
@@ -1150,7 +1150,7 @@ function addImp(rows,src){
   if(!rows.length){toast('لم أجد نصًا يمكن تقسيمه في '+src);return}
   var have={};S.imp.forEach(function(r){have[norm(r.text)]=1});
   rows.forEach(function(r){if(have[norm(r.text)]){r.on=false;r.dup=true}S.imp.push(r)});
-  toast('أُضيف '+rows.length+' سطرًا للمراجعة من '+src);render.keep=true;render();
+  toast('أُضيف '+cnt(rows.length,'سطر واحد','سطران','أسطر','سطرًا')+' للمراجعة من '+src);render.keep=true;render();
 }
 function defs(){return {kind:($('#d-kind')||{}).value||'hikma',topic:(($('#d-topic')||{}).value||'').trim()}}
 function readDoc(file){
@@ -1719,13 +1719,13 @@ function saveOne(){
   var e=S.edit?byId(S.edit):null;
   if(!e&&real().some(function(x){return norm(x.text)===norm(t)})){toast('هذه الحكمة موجودة مسبقًا');return}
   var topic=$('#a-topic').value.trim();LS.set('hikam-lasttopic',topic);
-  var x={id:e?e.id:uid(),text:t,kind:$('#a-kind').value,topic:topic,note:$('#a-note').value.trim(),star:$('#a-star').checked,created:e?e.created:Date.now()};
+  var x={id:e?e.id:uid(),text:t,kind:$('#a-kind').value,topic:topic,note:$('#a-note').value.trim(),star:!!(e&&e.star),created:e?e.created:Date.now()};
   putMany([x]).then(function(){toast(e?'حُفظ التعديل':'أُضيفت، يمكنك كتابة التالية');S.edit=null;render();var ta=$('#a-text');if(ta)ta.focus()},function(){toast('تعذر الحفظ، حاول مرة أخرى')});
 }
 function restore(file){
   var fr=new FileReader();fr.onload=function(){try{var d=JSON.parse(fr.result),L=(d.items||d||[]).filter(function(x){return x&&x.text});if(!L.length)throw 0;
     var have={};real().forEach(function(x){have[norm(x.text)]=1});var add=L.filter(function(x){return !have[norm(x.text)]}).map(function(x){return clean(Object.assign({},x,{id:x.id||uid()}))});
-    putMany(add).then(function(){toast('استُرجع '+add.length+' (تُخُطّي '+(L.length-add.length)+' مكرر)');render()},function(){toast('تعذر الاسترجاع')})}catch(e){toast('الملف ليس نسخة احتياطية صالحة')}};fr.readAsText(file);
+    putMany(add).then(function(){toast('استُرجع '+nf(add.length)+'، وتُخُطّي '+nf(L.length-add.length)+' مكرر');render()},function(){toast('تعذر الاسترجاع')})}catch(e){toast('الملف ليس نسخة احتياطية صالحة')}};fr.readAsText(file);
 }
 function backup(){
   var data=JSON.stringify({site:siteName(),father:S.settings.father,exported:new Date().toISOString(),items:real()},null,1);
@@ -1797,7 +1797,7 @@ document.addEventListener('click',function(e){
    case 'shlink':if(x){closeStudio();shareLink(x)}break;
    case 'link':if(x)shareLink(x);break;
    case 'gotopics':nav('topics');break;
-   case 'back':if(history.length>1)history.back();else nav('home');break;
+   case 'back':if(S.hn>0)history.back();else nav('home');break;
    case 'edit':S.edit=id;S.adm='add';go('admin');break;
    case 'canceledit':S.edit=null;S.adm='manage';render();break;
    case 'del':if(el.dataset.sure){removeOne(id).then(function(){S.edit=null;S.adm='manage';render();toast('حُذفت')},function(){toast('تعذر الحذف')})}else{el.dataset.sure='1';el.textContent='اضغط مرة أخرى للتأكيد';setTimeout(function(){if(el.isConnected){delete el.dataset.sure;el.textContent='حذف'}},4000)}break;
@@ -1815,7 +1815,7 @@ document.addEventListener('click',function(e){
    case 'impsave':
      var base=Date.now(),sel=S.imp.filter(function(r){return r.on&&norm(r.text).length>=3});
      var list=sel.map(function(r,i){return {id:uid()+i,text:r.text.trim(),kind:r.kind,topic:(r.topic||'').trim(),note:r.note||'',created:base-i}});
-     el.disabled=true;putMany(list).then(function(){S.imp=S.imp.filter(function(r){return !r.on});toast('حُفظ '+list.length+' من الحكم والأمثال');render()},function(){el.disabled=false;toast('تعذر الحفظ، حاول مرة أخرى')});break;
+     el.disabled=true;putMany(list).then(function(){S.imp=S.imp.filter(function(r){return !r.on});toast('حُفظ '+nf(list.length)+' من الحكم والأمثال');render()},function(){el.disabled=false;toast('تعذر الحفظ، حاول مرة أخرى')});break;
    case 'backup':backup();break;
   }
 });
