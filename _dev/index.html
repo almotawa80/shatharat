@@ -283,7 +283,7 @@ mark{background:color-mix(in srgb,var(--gold) 30%,transparent);color:inherit;bor
 
 /* sticky top bar */
 .topbar{position:sticky;top:0;z-index:9;margin-inline:-16px;padding:calc(8px + env(safe-area-inset-top,0px)) 16px 8px;background:color-mix(in srgb,var(--hero-bg) 94%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--hero-line);color:var(--hero-ink)}
-.topbar .wrap{display:flex;align-items:center;gap:10px}
+.topbar .wrap{display:flex;align-items:center;gap:10px;min-height:45px}
 .tb-brand{display:flex;align-items:center;gap:8px;background:none;border:0;color:var(--hero-gold);font-family:var(--f-display);font-weight:700;font-size:1.45rem;cursor:pointer;padding:0 4px;white-space:nowrap;line-height:1.2}
 .tb-search{position:relative;flex:1 1 auto;min-width:0}
 .tb-search svg{position:absolute;inset-inline-start:12px;top:50%;transform:translateY(-50%);color:var(--hero-muted)}
@@ -329,7 +329,7 @@ mark{background:color-mix(in srgb,var(--gold) 30%,transparent);color:inherit;bor
 .flash .mean{color:var(--muted);font-size:.95rem;max-width:46ch;margin:0 auto 8px}
 .flash .by{font-family:var(--f-display);color:var(--madder);font-size:1.2rem}
 .facts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px auto 8px;max-width:720px}
-.ifacts{gap:18px;margin-top:18px;flex-wrap:nowrap}
+.ifacts{gap:18px;margin-top:18px;flex-wrap:nowrap}.votd .ifacts.vacts{display:flex!important;justify-content:center;gap:10px;width:auto!important}.vacts .btn{width:50px!important;height:50px!important;padding:0!important}
 .ifacts .btn{flex:none;width:58px;height:58px;justify-content:center;padding:0;white-space:nowrap;border-radius:50%}.ifacts .btn svg{width:22px!important;height:22px!important}
 .ifacts .like{gap:0;position:relative}.ifacts .lkn{position:absolute;top:-3px;inset-inline-end:-3px;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:var(--madder);color:var(--surface);font-size:.75rem;font-weight:700;line-height:22px;text-align:center;box-shadow:0 0 0 2px var(--bg)}.ifacts .lkn:empty{display:none}
 .facts .btn svg{width:18px;height:18px}
@@ -345,7 +345,8 @@ mark{background:color-mix(in srgb,var(--gold) 30%,transparent);color:inherit;bor
 .qopt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--surface));font-weight:700}
 .qopt.wrong{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 12%,var(--surface));text-decoration:line-through}
 .qopt.dim{opacity:.55}
-.qres{text-align:center;margin-top:14px;font-weight:600}.qres.ok{color:var(--ok)}.qres.no{color:var(--danger)}
+.qres{text-align:center;margin-top:14px;font-weight:600}
+.qnav{display:flex;align-items:center;gap:12px;margin-top:16px}.qnav .btn{flex:1;height:56px;justify-content:center;font-size:1.1rem;border-radius:999px;gap:10px}.qnav .btn svg{width:20px;height:20px}.qnav .primary{position:relative}.qnav .primary svg{position:absolute;inset-inline-end:20px;top:50%;margin-top:-10px}.qnav .qwa{flex:none;width:56px;padding:0;border-radius:50%}.qnav .qwa svg{width:24px;height:24px}.qres.ok{color:var(--ok)}.qres.no{color:var(--danger)}
 
 /* phone fit: brand never squeezed, verse-of-day buttons stay inside the frame, stats on one tidy row */
 .tb-brand{flex:none}
@@ -405,7 +406,7 @@ mark{background:color-mix(in srgb,var(--gold) 30%,transparent);color:inherit;bor
 #under{position:fixed;inset:0;z-index:0;overflow:hidden;background:var(--bg);pointer-events:none}
 #under .uin{will-change:transform}#under .bbar{display:none}
 #under .ushade{position:absolute;inset:0;background:#000;opacity:.35}
-#under .uin{padding-inline:16px}#under .utop{position:absolute;top:0;inset-inline:0;z-index:2;padding-inline:16px}#under .utop .topbar{position:relative}
+#under .uin{padding-inline:16px}#under .skip,#app.swiping .skip{display:none}#under .utop{position:absolute;top:0;inset-inline:0;z-index:2;padding-inline:16px}#under .utop .topbar{position:relative}
 #app.swiping{position:relative;z-index:1;background:var(--bg);min-height:100vh;margin-inline:-16px;padding-inline:16px;box-shadow:12px 0 30px -12px rgba(0,0,0,.35);will-change:transform}
 html,body{overflow-x:clip}
 .who em,.sprev em{white-space:nowrap}
@@ -878,7 +879,7 @@ function votdHtml(){
   var v=S.rnd?byId(S.rnd):ofDay();if(!v)return '';
   return '<section class="votd" aria-label="حكمة اليوم"><span class="star8 a" aria-hidden="true">'+ICO.star+'</span><span class="star8 b" aria-hidden="true">'+ICO.star+'</span>'
    +'<div class="eyebrow">'+(S.rnd?KIND[v.kind]+' مختارة':KIND[v.kind]+' اليوم').replace('مثل مختارة','مثل مختار').replace('لطيفة مختارة','لطيفة مختارة')+'</div><q>'+esc(v.text)+'</q><div class="by">'+esc(father())+'</div>'
-   +'<div class="acts"><button class="btn wa" data-act="wacard" data-id="'+v.id+'">'+ICO.wa+' <span class="lg">أرسل في </span>واتساب</button><button class="btn primary" data-act="card" data-id="'+v.id+'">'+ICO.card+' <span class="lg">صمّم </span>البطاقة</button><button class="btn ghost" data-act="rand" aria-label="حكمة أخرى" title="حكمة أخرى">'+ICO.dice+'<span class="tx"> أخرى</span></button></div></section>';
+   +'<div class="acts ifacts vacts"><button class="btn wa" data-act="wacard" data-id="'+v.id+'" aria-label="مشاركة في واتساب" title="واتساب">'+ICO.wa+'</button><button class="btn primary" data-act="sheet" data-id="'+v.id+'" aria-label="مشاركة: بطاقة أو نسخ أو رابط" title="مشاركة">'+NAVI.share+'</button>'+likeBtn(v.id,'btn ghost')+'<button class="btn ghost ffav" data-act="fav" data-id="'+v.id+'" aria-pressed="'+!!S.fav[v.id]+'" aria-label="حفظ في المفضلة">'+(S.fav[v.id]?ICO.bmF:ICO.bm)+'</button><button class="btn ghost" data-act="rand" aria-label="حكمة أخرى" title="حكمة أخرى">'+ICO.dice+'</button></div></section>';
 }
 function bbar(){
   var b=function(act,v,ic,l){var on=S.view===v||(v==='topics'&&S.view==='topic');return '<button data-act="'+act+'" aria-pressed="'+on+'"'+(on?' aria-current="page"':'')+'>'+ic+l+'</button>'};
@@ -1047,7 +1048,7 @@ function quizView(){
    +'<div class="qscore"><span>السؤال <b>'+nf(Math.min(sc.n+(done?0:1),RN))+'</b> من '+nf(RN)+'</span><span>صحيحة <b>'+nf(sc.ok)+'</b></span><span>متتالية <b>'+nf(sc.streak)+'</b></span></div><div class="qbar" aria-hidden="true"><i style="width:'+(sc.n/RN*100)+'%"></i></div>'
    +'<section class="quiz"><q>'+esc(q.head)+' <span class="gap">…</span></q><div class="qopts">'
    +q.opts.map(function(o,i){var cls=done?(i===q.ok?' right':i===q.pick?' wrong':' dim'):'';return '<button class="qopt'+cls+'" data-act="qpick" data-i="'+i+'"'+(done?' disabled':'')+'>'+(done&&i===q.ok?'<span class="qmk" aria-hidden="true">✓</span>':done&&i===q.pick?'<span class="qmk" aria-hidden="true">✗</span>':'')+esc(o)+(done&&i===q.ok?'<span class="sr-only"> (الصحيحة)</span>':done&&i===q.pick?'<span class="sr-only"> (اختيارك)</span>':'')+'</button>'}).join('')+'</div>'
-   +'<div class="qlive" role="status">'+(done?'<div class="qres '+(q.pick===q.ok?'ok':'no')+'">'+(q.pick===q.ok?'✓ أحسنت!':'✗ ليست هذه. الصحيحة هي المعلَّمة بـ ✓.')+'</div>':'')+'</div>'+(done?'<div class="facts"><button class="btn primary big" data-act="qnext">'+(sc.n>=RN?'النتيجة':'التالية')+'</button><button class="btn wa" data-act="wacard" data-id="'+x.id+'">'+ICO.wa+' أرسلها</button></div>':'')
+   +'<div class="qlive" role="status">'+(done?'<div class="qres '+(q.pick===q.ok?'ok':'no')+'">'+(q.pick===q.ok?'✓ أحسنت!':'✗ الإجابة الصحيحة هي المعلَّمة بـ ✓')+'</div>':'')+'</div>'+(done?'<div class="qnav"><button class="btn wa qwa" data-act="wacard" data-id="'+x.id+'" aria-label="أرسلها في واتساب" title="واتساب">'+ICO.wa+'</button><button class="btn primary" data-act="qnext">'+(sc.n>=RN?'النتيجة':'التالية')+' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button></div>':'')
    +'</section></div>'+bbar();
 }
 
@@ -1205,7 +1206,7 @@ function lens(){
  document.addEventListener('click',function(e){if(window.__lensDrag&&Date.now()-window.__lensDrag<350&&e.isTrusted&&e.target.closest&&e.target.closest('.bbar')){e.stopPropagation();e.preventDefault()}},true);
 })();
 /* swipe left anywhere to go back: the page slides away and the previous page is drawn underneath, as in iOS */
-(function(){var sx=0,sy=0,dx=0,on=0,lock=0,app=null,un=null,sh=null,W=1,bb=null;
+(function(){var busy=0,sx=0,sy=0,dx=0,on=0,lock=0,app=null,un=null,sh=null,W=1,bb=null;
  function ux(X,tr){var u=un.firstChild,t=$('.utop',un),Y=-(prevState().y||0);if(tr!=null){u.style.transition=tr;if(t)t.style.transition=tr}u.style.transform='translate('+X+'px,'+Y+'px)';if(t)t.style.transform='translateX('+X+'px)'}
  function prevState(){return VSTACK.length?VSTACK[VSTACK.length-1]:{view:'home',topic:'',kind:'',sid:'',q:'',y:0}}
  function underlay(){var p=prevState(),keep={view:S.view,topic:S.topic,kind:S.kind,sid:S.sid,q:S.q,shown:S.shown,pv:S._pv},html='';
@@ -1213,18 +1214,18 @@ function lens(){
    S.view=keep.view;S.topic=keep.topic;S.kind=keep.kind;S.sid=keep.sid;S.q=keep.q;S.shown=keep.shown;S._pv=keep.pv;
    un=document.createElement('div');un.id='under';un.setAttribute('aria-hidden','true');var tmp=document.createElement('div');tmp.innerHTML=html;var tb=tmp.querySelector('.topbar'),top='';if(tb&&(p.y||0)>0){top='<div class="utop">'+tb.outerHTML+'</div>'}
    un.innerHTML='<div class="uin" style="transform:translateY('+(-(p.y||0))+'px)">'+html+'</div>'+top+'<div class="ushade"></div>';
-   document.body.insertBefore(un,document.body.firstChild);sh=$('.ushade',un)}
+   [].forEach.call(document.querySelectorAll('#under'),function(e){e.remove()});document.body.insertBefore(un,document.body.firstChild);sh=$('.ushade',un)}
  function blocked(t){if(!t.closest)return true;if(t.closest('.flash.swipe,input,textarea,select,.bbar,#ov,#wel,.mpanel,.studio'))return true;
    for(var e=t;e&&e!==document.body;e=e.parentElement){if(e.scrollWidth>e.clientWidth+2){var o=getComputedStyle(e).overflowX;if(o==='auto'||o==='scroll')return true}}return false}
- document.addEventListener('touchstart',function(e){if(S.view==='home'||$('#ov')||e.touches.length>1||blocked(e.target))return;
+ document.addEventListener('touchstart',function(e){if(busy||S.view==='home'||$('#ov')||e.touches.length>1||blocked(e.target))return;
    on=1;sx=e.touches[0].clientX;sy=e.touches[0].clientY;dx=0;lock=0;app=$('#app');W=window.innerWidth},{passive:true});
  document.addEventListener('touchmove',function(e){if(!on)return;var x=e.touches[0].clientX-sx,y=e.touches[0].clientY-sy;
    if(!lock){if(Math.abs(x)<10&&Math.abs(y)<10)return;lock=(x<0&&Math.abs(x)>Math.abs(y)*1.4)?1:2;if(lock===2){on=0;return}
      underlay();bb=$('.bbar',app);if(bb)document.body.appendChild(bb);app.classList.add('swiping')}
    dx=Math.max(0,-x);app.style.transform='translateX('+(-dx)+'px)';
    if(un){ux(W*0.3-dx*0.3);sh.style.opacity=String(Math.max(0,.35*(1-dx/W)))}},{passive:true});
- function clean(){if(bb&&bb.parentNode===document.body){if($('.bbar',app))bb.remove();else app.appendChild(bb)}bb=null;app.classList.remove('swiping');app.style.transition='';app.style.transform='';if(un){un.remove();un=null}}
- document.addEventListener('touchend',function(){if(!on)return;on=0;if(lock!==1)return;var go=dx>W*0.28;
+ function clean(){if(bb&&bb.parentNode===document.body){if($('.bbar',app))bb.remove();else app.appendChild(bb)}bb=null;app.classList.remove('swiping');app.style.transition='';app.style.transform='';if(un){un.remove();un=null}[].forEach.call(document.querySelectorAll('#under'),function(e){e.remove()});busy=0}
+ document.addEventListener('touchend',function(){if(!on)return;on=0;if(lock!==1)return;busy=1;var go=dx>W*0.28;
    app.style.transition='transform .24s cubic-bezier(.2,.8,.3,1)';if(un){ux(W*0.3-dx*0.3,'transform .24s cubic-bezier(.2,.8,.3,1)');sh.style.transition='opacity .24s'}
    if(go){app.style.transform='translateX('+(-W)+'px)';if(un){ux(0);sh.style.opacity='0'}
      setTimeout(function(){var nv=document.startViewTransition,done=0;document.startViewTransition=null;
@@ -1250,6 +1251,7 @@ function render(){
   if(S._pv==='topic'&&S.view!=='topic'){S.topic='';S.kind=''}S._pv=S.view;
   var y=window.scrollY;
   $('#app').innerHTML=viewHtml();
+  if(!$('#app').classList.contains('swiping'))[].forEach.call(document.querySelectorAll('#under'),function(e){e.remove()});
   if(render.keep)window.scrollTo(0,y);render.keep=false;
   bindInputs();watchMore();lens();
 }
